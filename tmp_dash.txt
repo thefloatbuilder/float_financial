@@ -1,0 +1,447 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/constants/app_colors.dart';
+import '../../shared/providers/auth_provider.dart';
+import '../../shared/providers/portfolio_provider.dart';
+import '../../shared/widgets/float_logo.dart';
+import '../../shared/widgets/animated_number.dart';
+import '../../shared/widgets/float_header.dart';
+
+class DashboardScreen extends ConsumerWidget {
+  const DashboardScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userAsync = ref.watch(currentUserProvider);
+
+    return userAsync.when(
+      data: (user) {
+        if (user == null) {
+          return const Scaffold(body: Center(child: Text('Please log in')));
+        }
+
+        final portfolioAsync = ref.watch(portfolioProvider(user.id));
+
+        return Scaffold(
+          body: SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Greeting with brand mark
+                  FloatHeader(title: 'Dashboard', logoSize: 36),
+                    SizedBox(height: 8),
+                    Row(
+                    children: [
+                      FloatLogo(
+                        size: 42,
+                        animated: false,
+                        showRipples: false,
+                        showBubbles: false,
+                        showExtraDecorations: false,
+                        // uses neutral (no portfolio data in scope here); perf wired below
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          'Good morning, ${user.name.split(' ').first}!',
+                          style: TextStyle(
+                            fontSize: 26,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).brightness == Brightness.dark
+                                ? AppColors.moonlightText
+                                : AppColors.deepNavy,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Portfolio Value Card
+                  portfolioAsync.when(
+                    data: (portfolio) {
+                      final totalValue = portfolio?['total_value']?.toString() ?? '0';
+                      final isDark = Theme.of(context).brightness == Brightness.dark;
+                      return TweenAnimationBuilder<double>(
+                        tween: Tween(begin: 0.0, end: 1.0),
+                        duration: const Duration(milliseconds: 420),
+                        curve: Curves.easeOutCubic,
+                        builder: (context, value, child) {
+                          return Opacity(
+                            opacity: value,
+                            child: Transform.translate(
+                              offset: Offset(0, 12 * (1 - value)),
+                              child: Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(28),
+                                decoration: BoxDecoration(
+                                  gradient: isDark ? AppColors.moonlightGradient : AppColors.sunlightGradient,
+                                  borderRadius: BorderRadius.circular(24),
+                                ),
+                                child: child,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                FloatLogo(
+                                  size: 22,
+                                  animated: false,
+                                  showRipples: true,
+                                  showBubbles: false,
+                                  showExtraDecorations: false,
+                                  performance: (portfolio?['monthly_change'] as num? ?? 12.4) >= 0 ? 'positive' : 'negative',
+                                ),
+                                const SizedBox(width: 8),
+                                const Text('Total Portfolio Value 🏖️', style: TextStyle(color: Colors.white70, fontSize: 16)),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            AnimatedNumber(
+                              value: double.tryParse(totalValue) ?? 0,
+                              prefix: '\$',
+                              style: const TextStyle(color: Colors.white, fontSize: 42, fontWeight: FontWeight.bold),
+                              showPerformanceColor: true,
+                              isPositive: (portfolio?['monthly_change'] as num? ?? 12.4) >= 0,
+                            ),
+                            if (portfolio?['tao_staked'] != null)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 4),
+                                child: Text(
+                                  '${(portfolio!['tao_staked'] as num).toStringAsFixed(0)} TAO staked on coldkey',
+                                  style: const TextStyle(color: Colors.white70, fontSize: 13),
+                                ),
+                              ),
+                            const SizedBox(height: 12),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: const Text('+12.4% this month', style: TextStyle(color: Colors.white)),
+                            ),
+                            const SizedBox(height: 6),
+                            Row(
+                              children: [
+                                Icon(Icons.link, size: 12, color: Colors.white70),
+                                SizedBox(width: 4),
+                                Text(
+                                  'Marcus Coldkey • 5EFcnuzB...',
+                                  style: TextStyle(color: Colors.white70, fontSize: 11),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    loading: () => const Center(child: CircularProgressIndicator()),
+                    error: (_, __) => const Text('Could not load portfolio'),
+                  ),
+
+
+                  // ROTH IRA (Manual) - small card
+                  if (portfolio != null && portfolio['roth_ira'] != null) ...[
+                    const SizedBox(height: 16),
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: isDark ? AppColors.moonlightSurface : Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: isDark ? AppColors.moonlightAccent.withOpacity(0.3) : Colors.grey.shade200),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  FloatLogo(size: 18, animated: false, showRipples: false, showBubbles: false, showExtraDecorations: false),
+                                  const SizedBox(width: 6),
+                                  const Text('ROTH IRA (Manual)', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                                ],
+                              ),
+                              const SizedBox(height: 4),
+                              Text('0.07398868 BTC + 804.88 XRP', style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              AnimatedNumber(
+                                value: (portfolio['roth_ira']['total_value'] as num).toDouble(),
+                                prefix: '\$',
+                                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              const Text('manual entry', style: TextStyle(fontSize: 10, color: Colors.grey)),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+
+                  const SizedBox(height: 28),
+
+                  Text('Yield Overview', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Theme.of(context).brightness == Brightness.dark ? AppColors.moonlightText : AppColors.deepNavy)),
+                  const SizedBox(height: 16),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton.icon(
+                        onPressed: () {
+                          ref.invalidate(portfolioProvider('marcus-demo-1'));
+                          ref.invalidate(coldkeyRefreshProvider);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Synced from coldkey')),
+                          );
+                        },
+                        icon: const Icon(Icons.refresh, size: 16),
+                        label: const Text('Sync coldkey (ROTH IRA manual) (ROTH IRA manual)', style: TextStyle(fontSize: 11)),
+                        style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: Size(0, 0)),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+
+                    if (lastSync != null)
+                    Text('Last synced (just refreshed): ' + lastSync!.toLocal().toString().substring(11, 19), style: TextStyle(fontSize: 10, color: Colors.white70)),
+                  if (portfolio != null && portfolio['last_updated'] != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Text(
+                          'Last synced from coldkey: ' + DateTime.parse(portfolio['last_updated']).toLocal().toString().substring(11, 19),
+                          style: TextStyle(fontSize: 10, color: Colors.white70),
+                        ),
+                      ),
+
+                    // Coldkey-specific cruise metrics
+                    if (portfolio != null && (portfolio['tao_staked'] ?? 0) > 0) ...[
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          gradient: isDark ? AppColors.moonlightGradient : AppColors.sunlightGradient,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('Coldkey Yield', style: TextStyle(color: Colors.white70, fontSize: 12)),
+                                Text('\$${(portfolio['daily_yield_estimate_usd'] ?? 412).toStringAsFixed(0)}', style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
+                              ],
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              decoration: BoxDecoration(color: Colors.white.withOpacity(0.2), borderRadius: BorderRadius.circular(20)),
+                              child: Text('+${(portfolio['monthly_change'] ?? 12.4).toStringAsFixed(1)}%', style: const TextStyle(color: Colors.white, fontSize: 12)),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton.icon(
+                        onPressed: () {
+                          ref.invalidate(portfolioProvider('marcus-demo-1'));
+                          ref.invalidate(coldkeyRefreshProvider);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Synced from coldkey')),
+                          );
+                        },
+                        icon: const Icon(Icons.refresh, size: 16),
+                        label: const Text('Sync coldkey (ROTH IRA manual) (ROTH IRA manual)', style: TextStyle(fontSize: 11)),
+                        style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: Size(0, 0)),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+
+                    if (lastSync != null)
+                    Text('Last synced (just refreshed): ' + lastSync!.toLocal().toString().substring(11, 19), style: TextStyle(fontSize: 10, color: Colors.white70)),
+                  if (portfolio != null && portfolio['last_updated'] != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Text(
+                          'Last synced from coldkey: ' + DateTime.parse(portfolio['last_updated']).toLocal().toString().substring(11, 19),
+                          style: TextStyle(fontSize: 10, color: Colors.white70),
+                        ),
+                      ),
+                    ],
+
+                  Row(
+                    children: [
+                      _buildYieldCard(context, 'Monthly Yield', '\$412', '+8%', AppColors.coral),
+                      const SizedBox(width: 12),
+                      _buildYieldCard(context, 'Avg APY', '14.2%', '+2.1%', AppColors.sunshineYellow),
+                    ],
+                  ),
+
+                  const SizedBox(height: 32),
+                  Text('Quick Actions', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Theme.of(context).brightness == Brightness.dark ? AppColors.moonlightText : AppColors.deepNavy)),
+                  const SizedBox(height: 16),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton.icon(
+                        onPressed: () {
+                          ref.invalidate(portfolioProvider('marcus-demo-1'));
+                          ref.invalidate(coldkeyRefreshProvider);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Synced from coldkey')),
+                          );
+                        },
+                        icon: const Icon(Icons.refresh, size: 16),
+                        label: const Text('Sync coldkey (ROTH IRA manual) (ROTH IRA manual)', style: TextStyle(fontSize: 11)),
+                        style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: Size(0, 0)),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+
+                    if (lastSync != null)
+                    Text('Last synced (just refreshed): ' + lastSync!.toLocal().toString().substring(11, 19), style: TextStyle(fontSize: 10, color: Colors.white70)),
+                  if (portfolio != null && portfolio['last_updated'] != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Text(
+                          'Last synced from coldkey: ' + DateTime.parse(portfolio['last_updated']).toLocal().toString().substring(11, 19),
+                          style: TextStyle(fontSize: 10, color: Colors.white70),
+                        ),
+                      ),
+
+                    // Coldkey-specific cruise metrics
+                    if (portfolio != null && (portfolio['tao_staked'] ?? 0) > 0) ...[
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          gradient: isDark ? AppColors.moonlightGradient : AppColors.sunlightGradient,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('Coldkey Yield', style: TextStyle(color: Colors.white70, fontSize: 12)),
+                                Text('\$${(portfolio['daily_yield_estimate_usd'] ?? 412).toStringAsFixed(0)}', style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
+                              ],
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              decoration: BoxDecoration(color: Colors.white.withOpacity(0.2), borderRadius: BorderRadius.circular(20)),
+                              child: Text('+${(portfolio['monthly_change'] ?? 12.4).toStringAsFixed(1)}%', style: const TextStyle(color: Colors.white, fontSize: 12)),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton.icon(
+                        onPressed: () {
+                          ref.invalidate(portfolioProvider('marcus-demo-1'));
+                          ref.invalidate(coldkeyRefreshProvider);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Synced from coldkey')),
+                          );
+                        },
+                        icon: const Icon(Icons.refresh, size: 16),
+                        label: const Text('Sync coldkey (ROTH IRA manual) (ROTH IRA manual)', style: TextStyle(fontSize: 11)),
+                        style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: Size(0, 0)),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+
+                    if (lastSync != null)
+                    Text('Last synced (just refreshed): ' + lastSync!.toLocal().toString().substring(11, 19), style: TextStyle(fontSize: 10, color: Colors.white70)),
+                  if (portfolio != null && portfolio['last_updated'] != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Text(
+                          'Last synced from coldkey: ' + DateTime.parse(portfolio['last_updated']).toLocal().toString().substring(11, 19),
+                          style: TextStyle(fontSize: 10, color: Colors.white70),
+                        ),
+                      ),
+                    ],
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildActionCard('New Alert', Icons.notifications_active, AppColors.primaryTeal),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: _buildActionCard('View Reports', Icons.description, AppColors.vibrantPurple),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      error: (error, _) => Scaffold(body: Center(child: Text('Error: $error'))),
+    );
+  }
+
+  Widget _buildYieldCard(BuildContext context, String title, String value, String change, Color color) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.moonlightSurface : AppColors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: isDark ? AppColors.moonlightSurfaceAlt : Colors.grey.shade200),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(title, style: TextStyle(color: isDark ? AppColors.moonlightSilver : Colors.grey)),
+            const SizedBox(height: 8),
+            AnimatedNumber(
+              value: 412.0,
+              prefix: '\$',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: isDark ? AppColors.moonlightText : AppColors.darkText,
+              ),
+              duration: const Duration(milliseconds: 650),
+            ),
+            const SizedBox(height: 4),
+            Text(change, style: TextStyle(color: color, fontWeight: FontWeight.w600)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionCard(String title, IconData icon, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, color: color, size: 32),
+          const SizedBox(height: 12),
+          Text(title, style: TextStyle(fontWeight: FontWeight.w600, color: color)),
+        ],
+      ),
+    );
+  }
+}

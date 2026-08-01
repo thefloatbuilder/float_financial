@@ -1,0 +1,70 @@
+name: float_financial
+description: Float Financial - Portfolio tracking & consulting app
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  http: ^1.2.2  # for real Bittensor data fetching (taostats / public RPC)
+  shared_preferences: ^2.2.0  # local persistence for ROTH edits and snapshots
+  flutter:
+    sdk: flutter
+
+  # State Management
+  flutter_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.5
+
+  # Backend
+  supabase_flutter: ^2.5.0
+
+  # Navigation
+  go_router: ^14.2.0
+
+  # Charts
+  fl_chart: ^0.68.0
+
+  # PDF Generation
+  pdf: ^3.10.8
+  printing: ^5.13.0
+
+  # Utilities
+  intl: ^0.19.0
+  equatable: ^2.0.5
+  flutter_local_notifications: ^22.2.0
+  flutter_animate: ^4.5.2
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  dio: ^5.11.0
+  flutter_form_builder: ^10.0.1
+  flutter_email_sender: ^6.0.3  # for lead notifications
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  riverpod_generator: ^2.4.0
+  build_runner: ^2.4.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/brand/
+
+
+# App Icons (Sunlight default + Moonlight dark variant)
+flutter_launcher_icons:
+  image_path: "assets/brand/float_raft_icon_source.png"
+
+  android:
+    image_path: "assets/brand/float_raft_icon_source.png"
+    image_path_dark: "assets/brand/float_raft_icon_source.png"
+    adaptive_icon_background: "#0F766E"           # Sunlight
+    adaptive_icon_background_dark: "#1A1535"      # Moonlight deep navy
+    adaptive_icon_foreground: "assets/brand/float_raft_icon_source.png"
+    adaptive_icon_foreground_dark: "assets/brand/float_raft_icon_source.png"
+
+  ios:
+    image_path: "assets/brand/float_raft_icon_source.png"

@@ -1,0 +1,347 @@
+﻿Resolving dependencies...
+Downloading packages...
+  _fe_analyzer_shared 85.0.0 (105.0.0 available)
+  analyzer 7.6.0 (14.1.0 available)
+  analyzer_plugin 0.13.4 (0.14.14 available)
+  build 2.5.4 (4.0.8 available)
+  build_config 1.1.2 (1.3.1 available)
+  build_resolvers 2.5.4 (3.0.4 available)
+  build_runner 2.5.4 (2.15.2 available)
+  build_runner_core 9.1.2 (9.3.2 available)
+  cli_util 0.4.2 (0.5.1 available)
+  custom_lint_core 0.7.5 (0.8.2 available)
+  custom_lint_visitor 1.0.0+7.7.0 (1.0.0+9.0.0 available)
+  dart_style 3.1.1 (3.1.12 available)
+  fl_chart 0.68.0 (1.2.0 available)
+  flutter_launcher_icons 0.13.1 (0.14.4 available)
+  flutter_lints 4.0.0 (6.0.0 available)
+  flutter_riverpod 2.6.1 (3.3.2 available)
+  go_router 14.8.1 (17.3.0 available)
+  intl 0.19.0 (0.20.3 available)
+  lints 4.0.0 (6.1.0 available)
+  matcher 0.12.19 (0.12.20 available)
+  meta 1.18.0 (1.19.0 available)
+  package_config 2.2.0 (3.0.0 available)
+  qr 3.0.2 (4.0.0 available)
+  riverpod 2.6.1 (3.3.2 available)
+  riverpod_annotation 2.6.1 (4.0.3 available)
+  riverpod_generator 2.6.5 (4.0.4 available)
+  source_gen 2.0.0 (4.2.3 available)
+  test_api 0.7.11 (0.7.13 available)
+  vector_math 2.2.0 (2.4.0 available)
+Got dependencies!
+29 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+Analyzing float_financial...                                    
+
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\core\theme\app_theme.dart:48:46 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\core\theme\app_theme.dart:102:50 - deprecated_member_use
+warning - Unused import: '../../shared/widgets/float_logo.dart'. Try removing the import directive - lib\features\admin\admin_dashboard_screen.dart:5:8 - unused_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\features\admin\admin_dashboard_screen.dart:76:70 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\features\admin\client_detail_screen.dart:27:54 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation - lib\features\admin\client_detail_screen.dart:33:17 - prefer_const_constructors
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\features\admin\client_detail_screen.dart:55:54 - deprecated_member_use
+warning - Unused import: '../../shared/widgets/float_logo.dart'. Try removing the import directive - lib\features\alerts\alerts_screen.dart:7:8 - unused_import
+warning - The value of the local variable 'isDark' isn't used. Try removing the variable or using it - lib\features\alerts\alerts_screen.dart:32:21 - unused_local_variable
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\features\alerts\alerts_screen.dart:63:42 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\features\alerts\alerts_screen.dart:223:30 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\features\alerts\alerts_screen.dart:224:28 - deprecated_member_use
+   info - Use 'const' for final variables initialized to a constant value. Try replacing 'final' with 'const' - lib\features\auth\login_screen.dart:52:7 - prefer_const_declarations
+   info - Don't invoke 'print' in production code. Try using a logging framework - lib\features\auth\login_screen.dart:63:7 - avoid_print
+   info - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation - lib\features\auth\login_screen.dart:89:17 - prefer_const_constructors
+warning - The declaration '<unnamed>' isn't referenced. Try removing the declaration of '<unnamed>' - lib\features\dashboard\dashboard_screen.dart:10:7 - unused_element
+warning - This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: DashboardScreen.loading, DashboardScreen.error - lib\features\dashboard\dashboard_screen.dart:10:7 - must_be_immutable
+  error - Can't define a const constructor for a class with non-final fields. Try making all of the fields final, or removing the keyword 'const' from the constructor - lib\features\dashboard\dashboard_screen.dart:11:9 - const_constructor_with_non_final_field
+  error - The named parameter 'error' is required, but there's no corresponding argument. Try adding the required argument - lib\features\dashboard\dashboard_screen.dart:17:22 - missing_required_argument
+  error - The named parameter 'loading' is required, but there's no corresponding argument. Try adding the required argument - lib\features\dashboard\dashboard_screen.dart:17:22 - missing_required_argument
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\features\dashboard\dashboard_screen.dart:64:53 - deprecated_member_use
+warning - Dead code. Try removing the code, or fixing the code before it so that it can be reached - lib\features\dashboard\dashboard_screen.dart:72:20 - dead_code
+  error - Expected to find ';' - lib\features\dashboard\dashboard_screen.dart:72:45 - expected_token
+  error - Expected an identifier - lib\features\dashboard\dashboard_screen.dart:72:46 - missing_identifier
+  error - Unexpected text ';'. Try removing the text - lib\features\dashboard\dashboard_screen.dart:72:46 - unexpected_token
+   info - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation - lib\features\dashboard\dashboard_screen.dart:83:29 - prefer_const_constructors
+   info - Use 'const' literals as arguments to constructors of '@immutable' classes. Try adding 'const' before the literal - lib\features\dashboard\dashboard_screen.dart:84:34 - prefer_const_literals_to_create_immutables
+   info - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation - lib\features\dashboard\dashboard_screen.dart:85:26 - prefer_const_constructors
+  error - Expected to find ';' - lib\features\dashboard\dashboard_screen.dart:98:20 - expected_token
+  error - Expected an identifier - lib\features\dashboard\dashboard_screen.dart:98:21 - missing_identifier
+  error - Unexpected text ';'. Try removing the text - lib\features\dashboard\dashboard_screen.dart:98:21 - unexpected_token
+  error - Undefined name 'portfolio'. Try correcting the name to one that is defined, or defining the name - lib\features\dashboard\dashboard_screen.dart:112:64 - undefined_identifier
+  error - Undefined name 'portfolio'. Try correcting the name to one that is defined, or defining the name - lib\features\dashboard\dashboard_screen.dart:112:141 - undefined_identifier
+  error - Undefined name 'portfolio'. Try correcting the name to one that is defined, or defining the name - lib\features\dashboard\dashboard_screen.dart:112:185 - undefined_identifier
+   info - Use interpolation to compose strings and values. Try using string interpolation to build the composite string - lib\features\dashboard\dashboard_screen.dart:114:50 - prefer_interpolation_to_compose_strings
+  error - Undefined name 'portfolio'. Try correcting the name to one that is defined, or defining the name - lib\features\dashboard\dashboard_screen.dart:114:51 - undefined_identifier
+  error - Undefined name 'portfolio'. Try correcting the name to one that is defined, or defining the name - lib\features\dashboard\dashboard_screen.dart:114:100 - undefined_identifier
+  error - Undefined name 'portfolio'. Try correcting the name to one that is defined, or defining the name - lib\features\dashboard\dashboard_screen.dart:114:145 - undefined_identifier
+  error - Undefined name 'portfolio'. Try correcting the name to one that is defined, or defining the name - lib\features\dashboard\dashboard_screen.dart:123:46 - undefined_identifier
+  error - Undefined name 'portfolio'. Try correcting the name to one that is defined, or defining the name - lib\features\dashboard\dashboard_screen.dart:124:43 - undefined_identifier
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\features\dashboard\dashboard_screen.dart:134:71 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\features\dashboard\dashboard_screen.dart:134:106 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation - lib\features\dashboard\dashboard_screen.dart:168:95 - prefer_const_constructors
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\features\dashboard\dashboard_screen.dart:177:95 - deprecated_member_use
+  error - Undefined name 'isPositive'. Try correcting the name to one that is defined, or defining the name - lib\features\dashboard\dashboard_screen.dart:193:41 - undefined_identifier
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\features\dashboard\dashboard_screen.dart:193:95 - deprecated_member_use
+  error - Undefined name 'isPositive'. Try correcting the name to one that is defined, or defining the name - lib\features\dashboard\dashboard_screen.dart:197:33 - undefined_identifier
+  error - Undefined name 'isPositive'. Try correcting the name to one that is defined, or defining the name - lib\features\dashboard\dashboard_screen.dart:201:42 - undefined_identifier
+  error - Expected to find ')' - lib\features\dashboard\dashboard_screen.dart:207:24 - expected_token
+  error - Expected to find ';' - lib\features\dashboard\dashboard_screen.dart:209:19 - expected_token
+warning - Dead code. Try removing the code, or fixing the code before it so that it can be reached - lib\features\dashboard\dashboard_screen.dart:209:20 - dead_code
+  error - Expected an identifier - lib\features\dashboard\dashboard_screen.dart:209:20 - missing_identifier
+  error - Unexpected text ';'. Try removing the text - lib\features\dashboard\dashboard_screen.dart:209:20 - unexpected_token
+  error - Expected to find ';' - lib\features\dashboard\dashboard_screen.dart:211:44 - expected_token
+  error - Expected an identifier - lib\features\dashboard\dashboard_screen.dart:211:45 - missing_identifier
+  error - Unexpected text ';'. Try removing the text - lib\features\dashboard\dashboard_screen.dart:211:45 - unexpected_token
+  error - Unterminated string literal - lib\features\dashboard\dashboard_screen.dart:212:133 - unterminated_string_literal
+   info - Unnecessary 'const' keyword. Try removing the keyword - lib\features\dashboard\dashboard_screen.dart:213:19 - unnecessary_const
+  error - Expected to find ',' - lib\features\dashboard\dashboard_screen.dart:213:19 - expected_token
+  error - Methods can't be invoked in constant expressions - lib\features\dashboard\dashboard_screen.dart:218:32 - const_eval_method_invocation
+   info - Unnecessary 'const' keyword. Try removing the keyword - lib\features\dashboard\dashboard_screen.dart:220:23 - unnecessary_const
+  error - Expected an identifier - lib\features\dashboard\dashboard_screen.dart:226:17 - missing_identifier
+  error - Expected to find ')' - lib\features\dashboard\dashboard_screen.dart:226:17 - expected_token
+  error - Expected to find ';' - lib\features\dashboard\dashboard_screen.dart:227:15 - expected_token
+  error - Expected an identifier - lib\features\dashboard\dashboard_screen.dart:227:16 - missing_identifier
+  error - Expected to find ';' - lib\features\dashboard\dashboard_screen.dart:227:16 - expected_token
+  error - Unexpected text ';'. Try removing the text - lib\features\dashboard\dashboard_screen.dart:227:16 - unexpected_token
+  error - Expected an identifier - lib\features\dashboard\dashboard_screen.dart:228:13 - missing_identifier
+  error - Expected to find ';' - lib\features\dashboard\dashboard_screen.dart:228:13 - expected_token
+  error - Unexpected text ';'. Try removing the text - lib\features\dashboard\dashboard_screen.dart:228:13 - unexpected_token
+  error - Expected an identifier - lib\features\dashboard\dashboard_screen.dart:228:14 - missing_identifier
+  error - Expected to find ';' - lib\features\dashboard\dashboard_screen.dart:228:14 - expected_token
+  error - Unexpected text ';'. Try removing the text - lib\features\dashboard\dashboard_screen.dart:228:14 - unexpected_token
+  error - Expected an identifier - lib\features\dashboard\dashboard_screen.dart:229:11 - missing_identifier
+  error - Expected to find ';' - lib\features\dashboard\dashboard_screen.dart:229:11 - expected_token
+  error - Unexpected text ';'. Try removing the text - lib\features\dashboard\dashboard_screen.dart:229:11 - unexpected_token
+  error - Expected an identifier - lib\features\dashboard\dashboard_screen.dart:229:12 - missing_identifier
+  error - Expected to find ';' - lib\features\dashboard\dashboard_screen.dart:229:12 - expected_token
+  error - Unexpected text ';'. Try removing the text - lib\features\dashboard\dashboard_screen.dart:229:12 - unexpected_token
+  error - Expected an identifier - lib\features\dashboard\dashboard_screen.dart:230:9 - missing_identifier
+  error - Unexpected text ';'. Try removing the text - lib\features\dashboard\dashboard_screen.dart:230:9 - unexpected_token
+   info - Unnecessary empty statement. Try removing the empty statement or restructuring the code - lib\features\dashboard\dashboard_screen.dart:230:10 - empty_statements
+  error - Expected a class member. Try placing this code inside a class member - lib\features\dashboard\dashboard_screen.dart:231:8 - expected_class_member
+   info - An uninitialized field should have an explicit type annotation. Try adding a type annotation - lib\features\dashboard\dashboard_screen.dart:232:7 - prefer_typing_uninitialized_variables
+  error - Expected to find ';' - lib\features\dashboard\dashboard_screen.dart:232:7 - expected_token
+  error - Variables must be declared using the keywords 'const', 'final', 'var' or a type name. Try adding the name of the type of the variable or the keyword 'var' - lib\features\dashboard\dashboard_screen.dart:232:7 - missing_const_final_var_or_type
+  error - Expected a class member. Try placing this code inside a class member - lib\features\dashboard\dashboard_screen.dart:232:14 - expected_class_member
+  error - Expected an identifier - lib\features\dashboard\dashboard_screen.dart:232:16 - missing_identifier
+  error - Expected to find ';' - lib\features\dashboard\dashboard_screen.dart:232:85 - expected_token
+  error - Expected a class member. Try placing this code inside a class member - lib\features\dashboard\dashboard_screen.dart:232:86 - expected_class_member
+   info - An uninitialized field should have an explicit type annotation. Try adding a type annotation - lib\features\dashboard\dashboard_screen.dart:233:7 - prefer_typing_uninitialized_variables
+  error - Expected to find ';' - lib\features\dashboard\dashboard_screen.dart:233:7 - expected_token
+  error - Variables must be declared using the keywords 'const', 'final', 'var' or a type name. Try adding the name of the type of the variable or the keyword 'var' - lib\features\dashboard\dashboard_screen.dart:233:7 - missing_const_final_var_or_type
+  error - Expected a class member. Try placing this code inside a class member - lib\features\dashboard\dashboard_screen.dart:233:12 - expected_class_member
+  error - Expected an identifier - lib\features\dashboard\dashboard_screen.dart:233:14 - missing_identifier
+  error - Expected to find ';' - lib\features\dashboard\dashboard_screen.dart:233:79 - expected_token
+  error - Expected a class member. Try placing this code inside a class member - lib\features\dashboard\dashboard_screen.dart:233:80 - expected_class_member
+  error - Expected a class member. Try placing this code inside a class member - lib\features\dashboard\dashboard_screen.dart:234:5 - expected_class_member
+  error - Expected a class member. Try placing this code inside a class member - lib\features\dashboard\dashboard_screen.dart:234:6 - expected_class_member
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\features\dashboard\dashboard_screen.dart:264:22 - deprecated_member_use
+  error - Expected a method, getter, setter or operator declaration. This appears to be incomplete code. Try removing it or completing it - lib\features\dashboard\dashboard_screen.dart:276:1 - expected_executable
+warning - Unused import: '../../shared/widgets/float_logo.dart'. Try removing the import directive - lib\features\main\main_navigation_screen.dart:7:8 - unused_import
+   info - The private field _currentPage could be 'final'. Try making the field 'final' - lib\features\onboarding\onboarding_screen.dart:15:7 - prefer_final_fields
+   info - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation - lib\features\onboarding\onboarding_screen.dart:86:19 - prefer_const_constructors
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\features\onboarding\onboarding_screen.dart:127:83 - deprecated_member_use
+  error - Undefined name 'BittensorService'. Try correcting the name to one that is defined, or defining the name - lib\features\portfolio\portfolio_screen.dart:27:35 - undefined_identifier
+  error - Undefined name 'user'. Try correcting the name to one that is defined, or defining the name - lib\features\portfolio\portfolio_screen.dart:31:48 - undefined_identifier
+   info - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check - lib\features\portfolio\portfolio_screen.dart:33:36 - use_build_context_synchronously
+   info - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation - lib\features\portfolio\portfolio_screen.dart:37:29 - prefer_const_constructors
+warning - The value of the local variable 'lastSync' isn't used. Try removing the variable or using it - lib\features\portfolio\portfolio_screen.dart:53:9 - unused_local_variable
+   info - The local variable '_justSynced' starts with an underscore. Try renaming the variable to not start with an underscore - lib\features\portfolio\portfolio_screen.dart:55:16 - no_leading_underscores_for_local_identifiers
+warning - The value of the local variable '_justSynced' isn't used. Try removing the variable or using it - lib\features\portfolio\portfolio_screen.dart:55:16 - unused_local_variable
+  error - The argument for the named parameter 'performance' was already specified. Try removing one of the named arguments, or correcting one of the names to reference a different named parameter - lib\features\portfolio\portfolio_screen.dart:81:234 - duplicate_named_argument
+  error - The named parameter 'showPerformanceColor' isn't defined. Try correcting the name to an existing named parameter's name, or defining a named parameter with the name 'showPerformanceColor' - lib\features\portfolio\portfolio_screen.dart:94:23 - undefined_named_parameter
+  error - The named parameter 'isPositive' isn't defined. Try correcting the name to an existing named parameter's name, or defining a named parameter with the name 'isPositive' - lib\features\portfolio\portfolio_screen.dart:95:23 - undefined_named_parameter
+  error - Undefined name 'isDark'. Try correcting the name to one that is defined, or defining the name - lib\features\portfolio\portfolio_screen.dart:102:33 - undefined_identifier
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\features\portfolio\portfolio_screen.dart:102:93 - deprecated_member_use
+  error - Undefined name 'isDark'. Try correcting the name to one that is defined, or defining the name - lib\features\portfolio\portfolio_screen.dart:104:51 - undefined_identifier
+  error - Undefined name 'isDark'. Try correcting the name to one that is defined, or defining the name - lib\features\portfolio\portfolio_screen.dart:109:61 - undefined_identifier
+  error - Undefined name 'isDark'. Try correcting the name to one that is defined, or defining the name - lib\features\portfolio\portfolio_screen.dart:115:38 - undefined_identifier
+   info - Use interpolation to compose strings and values. Try using string interpolation to build the composite string - lib\features\portfolio\portfolio_screen.dart:126:27 - prefer_interpolation_to_compose_strings
+  error - Undefined name 'isDark'. Try correcting the name to one that is defined, or defining the name - lib\features\portfolio\portfolio_screen.dart:135:67 - undefined_identifier
+   info - Use interpolation to compose strings and values. Try using string interpolation to build the composite string - lib\features\portfolio\portfolio_screen.dart:142:29 - prefer_interpolation_to_compose_strings
+  error - Undefined name 'isDark'. Try correcting the name to one that is defined, or defining the name - lib\features\portfolio\portfolio_screen.dart:154:34 - undefined_identifier
+  error - Expected to find ',' - lib\features\portfolio\portfolio_screen.dart:168:50 - expected_token
+  error - Too many positional arguments: 1 expected, but 3 found. Try removing the extra positional arguments, or specifying the name for named arguments - lib\features\portfolio\portfolio_screen.dart:168:50 - extra_positional_arguments_could_be_named
+  error - Undefined name 'tao_staked'. Try correcting the name to one that is defined, or defining the name - lib\features\portfolio\portfolio_screen.dart:168:50 - undefined_identifier
+  error - Expected to find ',' - lib\features\portfolio\portfolio_screen.dart:168:60 - expected_token
+  error - Undefined name 'isDark'. Try correcting the name to one that is defined, or defining the name - lib\features\portfolio\portfolio_screen.dart:197:34 - undefined_identifier
+  error - Expected to find ',' - lib\features\portfolio\portfolio_screen.dart:211:50 - expected_token
+  error - Too many positional arguments: 1 expected, but 3 found. Try removing the extra positional arguments, or specifying the name for named arguments - lib\features\portfolio\portfolio_screen.dart:211:50 - extra_positional_arguments_could_be_named
+  error - Undefined name 'tao_staked'. Try correcting the name to one that is defined, or defining the name - lib\features\portfolio\portfolio_screen.dart:211:50 - undefined_identifier
+  error - Expected to find ',' - lib\features\portfolio\portfolio_screen.dart:211:60 - expected_token
+  error - The method 'toList' isn't defined for the type 'Widget'. Try correcting the name to the name of an existing method, or defining a method named 'toList' - lib\features\portfolio\portfolio_screen.dart:221:124 - undefined_method
+  error - Expected to find ')' - lib\features\portfolio\portfolio_screen.dart:222:21 - expected_token
+  error - The argument for the named parameter 'performance' was already specified. Try removing one of the named arguments, or correcting one of the names to reference a different named parameter - lib\features\portfolio\portfolio_screen.dart:233:29 - duplicate_named_argument
+  error - The argument for the named parameter 'performance' was already specified. Try removing one of the named arguments, or correcting one of the names to reference a different named parameter - lib\features\portfolio\portfolio_screen.dart:238:29 - duplicate_named_argument
+  error - Undefined name 'isDark'. Try correcting the name to one that is defined, or defining the name - lib\features\portfolio\portfolio_screen.dart:274:36 - undefined_identifier
+  error - Undefined name 'isDark'. Try correcting the name to one that is defined, or defining the name - lib\features\portfolio\portfolio_screen.dart:277:38 - undefined_identifier
+   info - Unnecessary use of 'toList' in a spread. Try removing the invocation of 'toList' - lib\features\portfolio\portfolio_screen.dart:309:26 - unnecessary_to_list_in_spreads
+  error - Expected to find ']' - lib\features\portfolio\portfolio_screen.dart:314:15 - expected_token
+  error - Expected to find ')' - lib\features\portfolio\portfolio_screen.dart:314:16 - expected_token
+   info - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation - lib\features\profile\profile_screen.dart:39:21 - prefer_const_constructors
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\features\profile\profile_screen.dart:48:62 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\features\profile\profile_screen.dart:63:50 - deprecated_member_use
+  error - The named parameter 'error' is required, but there's no corresponding argument. Try adding the required argument - lib\features\reports\reports_screen.dart:20:28 - missing_required_argument
+  error - The named parameter 'loading' is required, but there's no corresponding argument. Try adding the required argument - lib\features\reports\reports_screen.dart:20:28 - missing_required_argument
+   info - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation - lib\features\reports\reports_screen.dart:31:17 - prefer_const_constructors
+   info - Use interpolation to compose strings and values. Try using string interpolation to build the composite string - lib\features\reports\reports_screen.dart:40:37 - prefer_interpolation_to_compose_strings
+   info - Use interpolation to compose strings and values. Try using string interpolation to build the composite string - lib\features\reports\reports_screen.dart:40:200 - prefer_interpolation_to_compose_strings
+   info - Use interpolation to compose strings and values. Try using string interpolation to build the composite string - lib\features\reports\reports_screen.dart:40:285 - prefer_interpolation_to_compose_strings
+  error - Undefined name 'style'. Try correcting the name to one that is defined, or defining the name - lib\features\reports\reports_screen.dart:40:403 - undefined_identifier
+  error - Expected to find ')' - lib\features\reports\reports_screen.dart:40:408 - expected_token
+  error - Expected to find ']' - lib\features\reports\reports_screen.dart:40:408 - expected_token
+   info - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check - lib\features\reports\reports_screen.dart:51:42 - use_build_context_synchronously
+   info - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation - lib\features\reports\reports_screen.dart:61:47 - prefer_const_constructors
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\features\reports\reports_screen.dart:61:152 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation - lib\features\reports\reports_screen.dart:61:219 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation - lib\features\reports\reports_screen.dart:61:242 - prefer_const_constructors
+   info - Use interpolation to compose strings and values. Try using string interpolation to build the composite string - lib\features\reports\reports_screen.dart:82:24 - prefer_interpolation_to_compose_strings
+  error - The named parameter 'label' is required, but there's no corresponding argument. Try adding the required argument - lib\features\reports\reports_screen.dart:96:17 - missing_required_argument
+warning - The receiver can't be null, so the null-aware operator '?[' is unnecessary. Try replacing the operator '?[' with '[' - lib\features\reports\reports_screen.dart:107:30 - invalid_null_aware_operator
+   info - Use interpolation to compose strings and values. Try using string interpolation to build the composite string - lib\features\reports\reports_screen.dart:108:24 - prefer_interpolation_to_compose_strings
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\features\reports\reports_screen.dart:121:78 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\features\reports\reports_screen.dart:121:120 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation - lib\features\reports\reports_screen.dart:125:19 - prefer_const_constructors
+warning - The receiver can't be null, so the null-aware operator '?[' is unnecessary. Try replacing the operator '?[' with '[' - lib\features\reports\reports_screen.dart:135:47 - invalid_null_aware_operator
+   info - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation - lib\features\reports\reports_screen.dart:135:106 - prefer_const_constructors
+warning - The receiver can't be null, so the null-aware operator '?[' is unnecessary. Try replacing the operator '?[' with '[' - lib\features\reports\reports_screen.dart:137:49 - invalid_null_aware_operator
+   info - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation - lib\features\reports\reports_screen.dart:137:104 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation - lib\features\reports\reports_screen.dart:146:23 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation - lib\features\reports\reports_screen.dart:146:57 - prefer_const_constructors
+warning - The receiver can't be null, so the null-aware operator '?[' is unnecessary. Try replacing the operator '?[' with '[' - lib\features\reports\reports_screen.dart:147:55 - invalid_null_aware_operator
+   info - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation - lib\features\reports\reports_screen.dart:147:127 - prefer_const_constructors
+  error - Expected an identifier - lib\features\reports\reports_screen.dart:155:13 - missing_identifier
+  error - Expected to find ')' - lib\features\reports\reports_screen.dart:155:13 - expected_token
+  error - Expected to find ';' - lib\features\reports\reports_screen.dart:207:13 - expected_token
+warning - Dead code. Try removing the code, or fixing the code before it so that it can be reached - lib\features\reports\reports_screen.dart:207:14 - dead_code
+  error - Expected an identifier - lib\features\reports\reports_screen.dart:207:14 - missing_identifier
+  error - Unexpected text ';'. Try removing the text - lib\features\reports\reports_screen.dart:207:14 - unexpected_token
+warning - The operand can't be 'null', so the condition is always 'true'. Remove the condition - lib\features\reports\reports_screen.dart:211:27 - unnecessary_null_comparison
+  error - Expected an identifier - lib\features\reports\reports_screen.dart:211:69 - missing_identifier
+   info - Statements in an if should be enclosed in a block. Try wrapping the statement in a block - lib\features\reports\reports_screen.dart:211:72 - curly_braces_in_flow_control_structures
+  error - Expected to find ']' - lib\features\reports\reports_screen.dart:212:41 - expected_token
+  error - Expected to find ';' - lib\features\reports\reports_screen.dart:260:13 - expected_token
+  error - Expected an identifier - lib\features\reports\reports_screen.dart:260:14 - missing_identifier
+  error - Unexpected text ';'. Try removing the text - lib\features\reports\reports_screen.dart:260:14 - unexpected_token
+  error - Expected to find ';' - lib\features\reports\reports_screen.dart:262:38 - expected_token
+  error - Expected an identifier - lib\features\reports\reports_screen.dart:262:39 - missing_identifier
+  error - Unexpected text ';'. Try removing the text - lib\features\reports\reports_screen.dart:262:39 - unexpected_token
+warning - The operand can't be 'null', so the condition is always 'true'. Remove the condition - lib\features\reports\reports_screen.dart:263:27 - unnecessary_null_comparison
+   info - Statements in an if should be enclosed in a block. Try wrapping the statement in a block - lib\features\reports\reports_screen.dart:264:15 - curly_braces_in_flow_control_structures
+   info - Use interpolation to compose strings and values. Try using string interpolation to build the composite string - lib\features\reports\reports_screen.dart:267:19 - prefer_interpolation_to_compose_strings
+  error - Expected to find ';' - lib\features\reports\reports_screen.dart:270:15 - expected_token
+  error - Expected an identifier - lib\features\reports\reports_screen.dart:270:16 - missing_identifier
+  error - Unexpected text ';'. Try removing the text - lib\features\reports\reports_screen.dart:270:16 - unexpected_token
+  error - Expected to find ';' - lib\features\reports\reports_screen.dart:271:180 - expected_token
+  error - Expected an identifier - lib\features\reports\reports_screen.dart:271:181 - missing_identifier
+  error - Unexpected text ';'. Try removing the text - lib\features\reports\reports_screen.dart:271:181 - unexpected_token
+  error - Expected to find ';' - lib\features\reports\reports_screen.dart:272:37 - expected_token
+  error - Expected an identifier - lib\features\reports\reports_screen.dart:272:38 - missing_identifier
+  error - Unexpected text ';'. Try removing the text - lib\features\reports\reports_screen.dart:272:38 - unexpected_token
+warning - The receiver can't be null, so the null-aware operator '?[' is unnecessary. Try replacing the operator '?[' with '[' - lib\features\reports\reports_screen.dart:273:26 - invalid_null_aware_operator
+   info - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation - lib\features\reports\reports_screen.dart:273:56 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation - lib\features\reports\reports_screen.dart:273:91 - prefer_const_constructors
+  error - Expected to find ';' - lib\features\reports\reports_screen.dart:273:164 - expected_token
+  error - Expected an identifier - lib\features\reports\reports_screen.dart:273:165 - missing_identifier
+  error - Unexpected text ';'. Try removing the text - lib\features\reports\reports_screen.dart:273:165 - unexpected_token
+  error - Expected to find ';' - lib\features\reports\reports_screen.dart:274:37 - expected_token
+  error - Expected an identifier - lib\features\reports\reports_screen.dart:274:38 - missing_identifier
+  error - Unexpected text ';'. Try removing the text - lib\features\reports\reports_screen.dart:274:38 - unexpected_token
+   info - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation - lib\features\reports\reports_screen.dart:276:28 - prefer_const_constructors
+  error - Expected an identifier - lib\features\reports\reports_screen.dart:276:273 - missing_identifier
+  error - Undefined name '$'. Try correcting the name to one that is defined, or defining the name - lib\features\reports\reports_screen.dart:276:274 - undefined_identifier
+  error - Expected to find ',' - lib\features\reports\reports_screen.dart:276:275 - expected_token
+  error - The operator '%' isn't defined for the type 'Set<dynamic>'. Try defining the operator '%' - lib\features\reports\reports_screen.dart:276:333 - undefined_operator
+  error - Expected an identifier - lib\features\reports\reports_screen.dart:276:334 - missing_identifier
+  error - Too many positional arguments: 5 expected, but 6 found. Try removing the extra arguments - lib\features\reports\reports_screen.dart:276:336 - extra_positional_arguments
+  error - Expected an identifier - lib\features\reports\reports_screen.dart:276:380 - missing_identifier
+  error - Undefined name '$'. Try correcting the name to one that is defined, or defining the name - lib\features\reports\reports_screen.dart:276:381 - undefined_identifier
+  error - Expected to find ',' - lib\features\reports\reports_screen.dart:276:382 - expected_token
+  error - The operator '%' isn't defined for the type 'Set<dynamic>'. Try defining the operator '%' - lib\features\reports\reports_screen.dart:276:440 - undefined_operator
+  error - Expected an identifier - lib\features\reports\reports_screen.dart:276:441 - missing_identifier
+  error - The element type 'bool' can't be assigned to the list type 'Widget' - lib\features\reports\reports_screen.dart:276:443 - list_element_type_not_assignable
+  error - Expected to find ';' - lib\features\reports\reports_screen.dart:276:447 - expected_token
+  error - Expected to find ']' - lib\features\reports\reports_screen.dart:276:447 - expected_token
+  error - Expected an identifier - lib\features\reports\reports_screen.dart:276:448 - missing_identifier
+  error - Unexpected text ';'. Try removing the text - lib\features\reports\reports_screen.dart:276:448 - unexpected_token
+   info - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation - lib\features\reports\reports_screen.dart:277:28 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation - lib\features\reports\reports_screen.dart:278:28 - prefer_const_constructors
+  error - Undefined name 'coldkeyTotal'. Try correcting the name to one that is defined, or defining the name - lib\features\reports\reports_screen.dart:278:221 - undefined_identifier
+  error - Undefined name 'rothTotal'. Try correcting the name to one that is defined, or defining the name - lib\features\reports\reports_screen.dart:278:236 - undefined_identifier
+  error - Expected an identifier - lib\features\reports\reports_screen.dart:278:275 - missing_identifier
+  error - Undefined name '$'. Try correcting the name to one that is defined, or defining the name - lib\features\reports\reports_screen.dart:278:276 - undefined_identifier
+  error - Expected to find ',' - lib\features\reports\reports_screen.dart:278:277 - expected_token
+  error - The operator '%' isn't defined for the type 'Set<dynamic>'. Try defining the operator '%' - lib\features\reports\reports_screen.dart:278:343 - undefined_operator
+  error - Expected an identifier - lib\features\reports\reports_screen.dart:278:344 - missing_identifier
+  error - Too many positional arguments: 5 expected, but 6 found. Try removing the extra arguments - lib\features\reports\reports_screen.dart:278:346 - extra_positional_arguments
+  error - Expected to find ';' - lib\features\reports\reports_screen.dart:281:7 - expected_token
+  error - Expected to find ']' - lib\features\reports\reports_screen.dart:281:7 - expected_token
+  error - Expected an identifier - lib\features\reports\reports_screen.dart:281:8 - missing_identifier
+  error - Unexpected text ';'. Try removing the text - lib\features\reports\reports_screen.dart:281:8 - unexpected_token
+  error - Expected to find '}' - lib\features\reports\reports_screen.dart:282:5 - expected_token
+  error - Expected to find ')' - lib\features\reports\reports_screen.dart:282:6 - expected_token
+warning - The declaration '_buildBarGroups' isn't referenced. Try removing the declaration of '_buildBarGroups' - lib\features\reports\reports_screen.dart:285:27 - unused_element
+  error - Undefined name 'portfolio'. Try correcting the name to one that is defined, or defining the name - lib\features\reports\reports_screen.dart:287:23 - undefined_identifier
+  error - Undefined name 'portfolio'. Try correcting the name to one that is defined, or defining the name - lib\features\reports\reports_screen.dart:288:22 - undefined_identifier
+   info - Use 'const' for final variables initialized to a constant value. Try replacing 'final' with 'const' - lib\features\reports\reports_screen.dart:289:5 - prefer_const_declarations
+warning - The value of the local variable 'baseMonthly' isn't used. Try removing the variable or using it - lib\features\reports\reports_screen.dart:290:11 - unused_local_variable
+  error - Undefined name 'portfolio'. Try correcting the name to one that is defined, or defining the name - lib\features\reports\reports_screen.dart:291:24 - undefined_identifier
+warning - The value of the local variable 'liveMonthly' isn't used. Try removing the variable or using it - lib\features\reports\reports_screen.dart:292:11 - unused_local_variable
+  error - Undefined name 'portfolio'. Try correcting the name to one that is defined, or defining the name - lib\features\reports\reports_screen.dart:292:26 - undefined_identifier
+  error - Undefined name 'portfolio'. Try correcting the name to one that is defined, or defining the name - lib\features\reports\reports_screen.dart:293:20 - undefined_identifier
+  error - Expected to find ';' - lib\features\reports\reports_screen.dart:293:61 - expected_token
+  error - Expected an identifier - lib\features\reports\reports_screen.dart:293:68 - missing_identifier
+warning - The declaration '_buildMetric' isn't referenced. Try removing the declaration of '_buildMetric' - lib\features\reports\reports_screen.dart:363:10 - unused_element
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\features\splash\splash_screen.dart:80:43 - deprecated_member_use
+   info - 'anonKey' is deprecated and shouldn't be used. Use publishableKey instead. anonKey will be removed in a future major version. Try replacing the use of the deprecated member with the replacement - lib\main.dart:14:7 - deprecated_member_use
+   info - Use 'const' for final variables initialized to a constant value. Try replacing 'final' with 'const' - lib\shared\services\bittensor_service.dart:42:9 - prefer_const_declarations
+   info - Don't invoke 'print' in production code. Try using a logging framework - lib\shared\services\bittensor_service.dart:70:7 - avoid_print
+   info - Use 'const' for final variables initialized to a constant value. Try replacing 'final' with 'const' - lib\shared\services\bittensor_service.dart:77:5 - prefer_const_declarations
+   info - Use 'const' for final variables initialized to a constant value. Try replacing 'final' with 'const' - lib\shared\services\bittensor_service.dart:79:5 - prefer_const_declarations
+   info - The imported package 'flutter_local_notifications' isn't a dependency of the importing package. Try adding a dependency for 'flutter_local_notifications' in the 'pubspec.yaml' file - lib\shared\services\notification_service.dart:1:8 - depend_on_referenced_packages
+  error - Target of URI doesn't exist: 'package:flutter_local_notifications/flutter_local_notifications.dart'. Try creating the file referenced by the URI, or try using a URI for a file that does exist - lib\shared\services\notification_service.dart:1:8 - uri_does_not_exist
+  error - Undefined class 'FlutterLocalNotificationsPlugin'. Try changing the name to the name of an existing class, or creating a class with the name 'FlutterLocalNotificationsPlugin' - lib\shared\services\notification_service.dart:4:16 - undefined_class
+  error - The method 'FlutterLocalNotificationsPlugin' isn't defined for the type 'NotificationService'. Try correcting the name to the name of an existing method, or defining a method named 'FlutterLocalNotificationsPlugin' - lib\shared\services\notification_service.dart:5:7 - undefined_method
+  error - Undefined class 'AndroidInitializationSettings'. Try changing the name to the name of an existing class, or creating a class with the name 'AndroidInitializationSettings' - lib\shared\services\notification_service.dart:8:11 - undefined_class
+  error - Const variables must be initialized with a constant value. Try changing the initializer to be a constant expression - lib\shared\services\notification_service.dart:9:9 - const_initialized_with_non_constant_value
+  error - The method 'AndroidInitializationSettings' isn't defined for the type 'NotificationService'. Try correcting the name to the name of an existing method, or defining a method named 'AndroidInitializationSettings' - lib\shared\services\notification_service.dart:9:9 - undefined_method
+  error - Undefined class 'InitializationSettings'. Try changing the name to the name of an existing class, or creating a class with the name 'InitializationSettings' - lib\shared\services\notification_service.dart:11:11 - undefined_class
+  error - Const variables must be initialized with a constant value. Try changing the initializer to be a constant expression - lib\shared\services\notification_service.dart:11:45 - const_initialized_with_non_constant_value
+  error - The method 'InitializationSettings' isn't defined for the type 'NotificationService'. Try correcting the name to the name of an existing method, or defining a method named 'InitializationSettings' - lib\shared\services\notification_service.dart:11:45 - undefined_method
+  error - Undefined class 'AndroidNotificationDetails'. Try changing the name to the name of an existing class, or creating a class with the name 'AndroidNotificationDetails' - lib\shared\services\notification_service.dart:22:11 - undefined_class
+  error - Const variables must be initialized with a constant value. Try changing the initializer to be a constant expression - lib\shared\services\notification_service.dart:22:55 - const_initialized_with_non_constant_value
+  error - The method 'AndroidNotificationDetails' isn't defined for the type 'NotificationService'. Try correcting the name to the name of an existing method, or defining a method named 'AndroidNotificationDetails' - lib\shared\services\notification_service.dart:22:55 - undefined_method
+  error - Undefined name 'Importance'. Try correcting the name to one that is defined, or defining the name - lib\shared\services\notification_service.dart:26:19 - undefined_identifier
+  error - Undefined name 'Priority'. Try correcting the name to one that is defined, or defining the name - lib\shared\services\notification_service.dart:27:17 - undefined_identifier
+  error - Undefined class 'NotificationDetails'. Try changing the name to the name of an existing class, or creating a class with the name 'NotificationDetails' - lib\shared\services\notification_service.dart:30:11 - undefined_class
+  error - Const variables must be initialized with a constant value. Try changing the initializer to be a constant expression - lib\shared\services\notification_service.dart:30:53 - const_initialized_with_non_constant_value
+  error - The method 'NotificationDetails' isn't defined for the type 'NotificationService'. Try correcting the name to the name of an existing method, or defining a method named 'NotificationDetails' - lib\shared\services\notification_service.dart:30:53 - undefined_method
+   info - Don't invoke 'print' in production code. Try using a logging framework - lib\shared\services\supabase_service.dart:127:7 - avoid_print
+   info - Don't invoke 'print' in production code. Try using a logging framework - lib\shared\services\supabase_service.dart:146:7 - avoid_print
+warning - The value of the local variable 'short' isn't used. Try removing the variable or using it - lib\shared\widgets\coldkey_badge.dart:19:11 - unused_local_variable
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\shared\widgets\coldkey_badge.dart:24:75 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\shared\widgets\coldkey_badge.dart:27:77 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation - lib\shared\widgets\float_empty_state.dart:32:13 - prefer_const_constructors
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\shared\widgets\float_empty_state.dart:64:24 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\shared\widgets\float_logo.dart:121:35 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\shared\widgets\float_logo.dart:159:48 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\shared\widgets\float_logo.dart:176:35 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\shared\widgets\float_logo.dart:182:24 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\shared\widgets\float_logo.dart:194:52 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\shared\widgets\float_logo.dart:250:33 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\shared\widgets\float_logo.dart:266:33 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\shared\widgets\float_logo.dart:282:34 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\shared\widgets\float_logo.dart:296:33 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\shared\widgets\float_logo.dart:311:34 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\shared\widgets\float_logo.dart:339:37 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\shared\widgets\float_logo.dart:342:59 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement - lib\shared\widgets\float_logo.dart:342:92 - deprecated_member_use
+warning - The dev dependency on http is unnecessary because there is also a normal dependency on that package. Try removing the dev dependency - pubspec.yaml:37:3 - unnecessary_dev_dependency
+warning - The dev dependency on shared_preferences is unnecessary because there is also a normal dependency on that package. Try removing the dev dependency - pubspec.yaml:38:3 - unnecessary_dev_dependency
+  error - The name 'MyApp' isn't a class. Try correcting the name to match an existing class - test\widget_test.dart:16:35 - creation_with_non_type
+
+flutter.bat : 303 issues found. (ran in 5.9s)
+At line:5 char:1
++ & $flutter analyze 2>&1 | Out-File -FilePath $log -Encoding utf8
++ ~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (303 issues found. (ran in 5.9s):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

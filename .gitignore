@@ -1,0 +1,26 @@
+# Dependencies
+.dart_tool/
+.packages
+build/
+
+# Flutter
+.flutter-plugins
+.flutter-plugins-dependencies
+*.iml
+.idea/
+.vscode/
+
+# Secrets — never commit real credentials
+.env
+*.env
+.supabase/
+service_account*.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Android/iOS
+android/.gradle/
+ios/Pods/
+ios/.symlinks/
