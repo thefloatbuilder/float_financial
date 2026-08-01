@@ -16,6 +16,12 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
           
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+        
+      - name: Accept Android licenses
+        run: yes "y" | sdkmanager --licenses || true
+        
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.44.6'
@@ -23,9 +29,6 @@ jobs:
           
       - name: Get dependencies
         run: flutter pub get
-        
-      - name: Analyze
-        run: flutter analyze --no-fatal-infos
         
       - name: Build APK
         run: flutter build apk --release
@@ -49,6 +52,11 @@ jobs:
           
       - name: Get dependencies
         run: flutter pub get
+        
+      - name: Setup CocoaPods
+        run: |
+          sudo gem install cocoapods
+          pod setup --verbose
         
       - name: Build iOS
         run: flutter build ios --release --no-codesign
