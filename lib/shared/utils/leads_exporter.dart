@@ -1,14 +1,21 @@
 import 'dart:convert';
-import 'dart:html' as html;
+import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:path_provider/path_provider.dart';
 import '../services/local_storage_service.dart';
 
-/// Export leads to CSV and download
+// Conditional import for web-specific code
+import 'leads_exporter_stub.dart'
+    if (dart.library.html) 'leads_exporter_web.dart';
+
+/// Export leads to CSV and download/share
+/// Platform-aware: uses dart:html on web, file system on mobile
 class LeadsExporter {
-  static Future<void> exportToCsv() async {
+  static Future<String?> exportToCsv() async {
     final leads = await LocalStorageService.loadLeads();
     
     if (leads.isEmpty) {
-      return;
+      return null;
     }
     
     // Build CSV
@@ -24,15 +31,26 @@ class LeadsExporter {
       buffer.writeln('$name,$email,$range,$message,$date');
     }
     
-    // Download as file
     final csv = buffer.toString();
-    final bytes = utf8.encode(csv);
-    final blob = html.Blob([bytes], 'text/csv');
-    final url = html.Url.createObjectUrlFromBlob(blob);
-    final anchor = html.AnchorElement(href: url)
-      ..setAttribute('download', 'float_financial_leads_${DateTime.now().toIso8601String().split('T')[0]}.csv')
-      ..click();
-    html.Url.revokeObjectUrl(url);
+    
+    if (kIsWeb) {
+      // Web: download via blob - implemented in leads_exporter_web.dart
+      return downloadCsvWeb(csv);
+    } else {
+      // Mobile: save to file
+      return _saveToFile(csv);
+    }
+  }
+  
+  static Future<String> _saveToFile(String csv) async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/float_financial_leads_${DateTime.now().toIso8601String().split('T')[0]}.csv');
+      await file.writeAsString(csv);
+      return 'Saved to: ${file.path}';
+    } catch (e) {
+      return 'Error saving file: $e';
+    }
   }
   
   static String _escapeCsv(String value) {
