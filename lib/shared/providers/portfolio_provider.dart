@@ -18,11 +18,11 @@ class PortfolioNotifier extends StateNotifier<Map<String, dynamic>> {
     'roth_ira': {
       'btc_amount': 0.07398868,
       'xrp_amount': 808.88,
-      'total_usd': 9424.23,
+      'total_usd': 5528.68,
     },
     'holdings': [
       {'name': 'Coldkey TAO', 'value': 130000.0, 'color': 0xFF14B8A6, 'source': 'Coldkey'},
-      {'name': 'ROTH IRA', 'value': 9424.0, 'color': 0xFFF97316, 'source': 'Manual'},
+      {'name': 'ROTH IRA', 'value': 5528.68, 'color': 0xFFF97316, 'source': 'Manual'},
       {'name': 'BTC', 'value': 5200.0, 'color': 0xFFF59E0B, 'source': 'Coinbase'},
       {'name': 'XRP', 'value': 4581.0, 'color': 0x3B82F6, 'source': 'Kraken'},
       {'name': 'ETH', 'value': 3019.0, 'color': 0x8B5CF6, 'source': 'Binance'},
@@ -64,7 +64,7 @@ class PortfolioNotifier extends StateNotifier<Map<String, dynamic>> {
         final updated = {
           'btc_amount': 0.07398868,
           'xrp_amount': 808.88,
-          'total_usd': 9424.23,
+          'total_usd': 5528.68,
         };
         state = {...state, 'roth_ira': updated};
         await LocalStorageService.saveROTH(updated);

@@ -163,7 +163,7 @@ class PortfolioScreen extends ConsumerWidget {
             const SizedBox(height: 12),
             _buildHoldingCard(context, 'Coldkey Stake', '${(portfolio['total_stake'] as num?)?.toDouble() ?? 142.5} TAO', '\$${(totalValue * 0.85).toStringAsFixed(0)}', '🛟', isDark),
             const SizedBox(height: 10),
-            _buildHoldingCard(context, 'ROTH IRA', 'Mixed Assets', '\$${(portfolio['roth_ira']?['total_usd'] as num?)?.toStringAsFixed(0) ?? '9,424'}', '🏝️', isDark),
+            _buildHoldingCard(context, 'ROTH IRA', 'Mixed Assets', '\$${(portfolio['roth_ira']?['total_usd'] as num?)?.toStringAsFixed(0) ?? '5,528'}', '🏝️', isDark),
 
             const SizedBox(height: 24),
             Container(
