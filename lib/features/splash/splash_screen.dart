@@ -24,10 +24,18 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (!mounted) return;
 
-    final user = Supabase.instance.client.auth.currentUser;
+    // Check auth — safe when Supabase isn't initialized (demo mode)
+    bool hasUser = false;
+    try {
+      final user = Supabase.instance.client.auth.currentUser;
+      hasUser = user != null;
+    } catch (_) {
+      // Supabase not initialized — demo mode, go to login
+      hasUser = false;
+    }
 
     if (mounted) {
-      if (user != null) {
+      if (hasUser) {
         context.go('/home');
       } else {
         context.go('/');

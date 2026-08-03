@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Float Financial</title>
+  <style>
+    body { margin: 0; background: #13C4C4; color: white; font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; }
+    .container { text-align: center; }
+    h1 { font-size: 32px; margin-bottom: 16px; }
+    p { font-size: 18px; opacity: 0.9; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Float Financial 🛟</h1>
+    <p>Your portfolio, on cruise mode</p>
+    <p style="margin-top: 32px; font-size: 14px;">Loading app...</p>
+  </div>
+  
+  <script>
+    // Test if flutter_bootstrap loads
+    var script = document.createElement('script');
+    script.src = 'flutter_bootstrap.js';
+    script.onload = function() {
+      document.body.innerHTML = '<div class="container"><h1>Flutter Loaded!</h1><p>Bootstrap script executed</p></div>';
+      // Try to boot Flutter
+      if (window.flutterBootstrap) {
+        document.body.innerHTML = '<div class="container"><h1>Flutter Ready!</h1><p>Starting app...</p></div>';
+      }
+    };
+    script.onerror = function() {
+      document.body.innerHTML = '<div class="container"><h1>Error</h1><p>Failed to load flutter_bootstrap.js</p></div>';
+    };
+    document.head.appendChild(script);
+  </script>
+</body>
+</html>
