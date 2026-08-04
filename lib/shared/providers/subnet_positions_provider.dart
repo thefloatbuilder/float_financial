@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import '../models/subnet_position.dart';
+import '../services/local_storage_service.dart';
+import '../services/notification_service.dart';
 import '../utils/subnet_apy.dart';
 import '../utils/yield_alerts.dart';
 import '../utils/rebalance_engine.dart';
@@ -142,11 +144,20 @@ final subnetSummaryProvider = Provider<Map<String, dynamic>>((ref) {
   );
 });
 
-/// Previous positions for alert comparison (simulated)
+/// Previous positions for alert comparison — real snapshot persisted from the
+/// last fetch. Falls back to simulated previous state on first-ever run so the
+/// alerts UI still has something to show in demo mode.
 final previousPositionsProvider = FutureProvider<List<SubnetPosition>>((ref) async {
-  await Future.delayed(const Duration(milliseconds: 300));
-  
-  // Simulate slightly different previous state for alert demo
+  final saved = await LocalStorageService.loadPreviousPositions();
+  if (saved != null && saved.isNotEmpty) {
+    try {
+      return saved.map(SubnetPosition.fromJson).toList();
+    } catch (_) {
+      // Corrupted cache — fall through to demo
+    }
+  }
+
+  // First run: simulate slightly different previous state for alert demo
   return [
     SubnetPosition.fromData(
       subnetId: 64,
@@ -183,14 +194,82 @@ final previousPositionsProvider = FutureProvider<List<SubnetPosition>>((ref) asy
   ];
 });
 
-/// Yield alerts provider
+/// Yield alerts provider — compares current live positions against the last
+/// persisted snapshot, fires local notifications for fresh alerts, logs them
+/// to the in-app inbox, then saves current as the new previous snapshot.
 final yieldAlertsProvider = FutureProvider<List<YieldAlert>>((ref) async {
   final current = await ref.watch(subnetPositionsProvider.future);
   final previous = await ref.watch(previousPositionsProvider.future);
-  
+
   final engine = YieldAlertEngine();
-  return engine.checkAlerts(current, previous);
+  final alerts = engine.checkAlerts(current, previous);
+
+  if (alerts.isNotEmpty) {
+    // Dedup: only notify once per (subnetId, type) per 24h cooldown window,
+    // so a sustained move doesn't spam on every refresh but a new move
+    // tomorrow still alerts.
+    final inbox = await LocalStorageService.loadNotifications();
+    final cooldown = DateTime.now().subtract(const Duration(hours: 24));
+    final recentlyNotified = inbox
+        .where((n) =>
+            n['kind'] == 'yield_alert' &&
+            (DateTime.tryParse('${n['saved_at']}') ?? DateTime(2000)).isAfter(cooldown))
+        .map((n) => '${n['alert_key']}')
+        .toSet();
+
+    final fresh = alerts
+        .where((a) => !recentlyNotified.contains('${a.subnetId}:${a.type}'))
+        .toList();
+
+    if (fresh.isNotEmpty) {
+      // Fire local push notifications (Android); no-op failures are swallowed
+      // by the service on platforms without notification support (web).
+      for (final alert in fresh) {
+        try {
+          await NotificationService.showNotification(
+            title: _alertTitle(alert),
+            body: alert.message,
+          );
+        } catch (_) {}
+      }
+
+      // Log to in-app notification inbox
+      for (final alert in fresh) {
+        inbox.insert(0, {
+          'kind': 'yield_alert',
+          'alert_key': '${alert.subnetId}:${alert.type}',
+          'title': _alertTitle(alert),
+          'message': alert.message,
+          'severity': alert.severity.name,
+          'saved_at': alert.timestamp.toIso8601String(),
+        });
+      }
+      await LocalStorageService.saveNotifications(inbox.take(50).toList());
+    }
+
+    // Persist current positions as the baseline for the next comparison
+    await LocalStorageService.savePreviousPositions(
+      current.map((p) => p.toJson()).toList(),
+    );
+  }
+
+  return alerts;
 });
+
+String _alertTitle(YieldAlert alert) {
+  switch (alert.type) {
+    case 'apy_drop':
+      return '📉 Yield Alert: APY Drop';
+    case 'apy_spike':
+      return '📈 Yield Alert: APY Spike';
+    case 'alpha_price_drop':
+      return '🔴 Alpha Price Drop';
+    case 'alpha_price_spike':
+      return '🟢 Alpha Price Spike';
+    default:
+      return '🌊 Float Yield Alert';
+  }
+}
 
 /// Target allocations for rebalancing (Paul's plan)
 final targetAllocationsProvider = Provider<Map<int, double>>((ref) {

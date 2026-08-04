@@ -21,6 +21,18 @@ void main() {
       expect(alerts, isEmpty);
     });
 
+    test('SubnetPosition toJson/fromJson round-trips alert-relevant fields', () {
+      final p = makePosition(id: 53, apy: 21.0, price: 5.73, staked: 25.0);
+      final restored = SubnetPosition.fromJson(p.toJson());
+      expect(restored.subnetId, p.subnetId);
+      expect(restored.name, p.name);
+      expect(restored.stakedTao, closeTo(p.stakedTao, 1e-9));
+      expect(restored.alphaBalance, closeTo(p.alphaBalance, 1e-9));
+      expect(restored.alphaPriceTao, closeTo(p.alphaPriceTao, 1e-9));
+      expect(restored.monthlyYieldTao, closeTo(p.monthlyYieldTao, 1e-9));
+      expect(restored.apy, closeTo(p.apy, 1e-6));
+    });
+
     test('APY drop alert fires when APY decreases beyond threshold', () {
       final prev = [makePosition(id: 64, apy: 17.5, price: 15.0)];
       final curr = [makePosition(id: 64, apy: 15.0, price: 15.0)]; // -2.5%

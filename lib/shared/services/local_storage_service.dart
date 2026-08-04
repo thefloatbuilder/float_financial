@@ -173,6 +173,26 @@ class LocalStorageService {
   static Future<Map<String, dynamic>?> loadROTH() => loadRothIra();
   static Future<void> saveROTH(Map<String, dynamic> data) => saveRothIra(data);
 
+  // Previous subnet positions snapshot (for yield alert comparisons)
+  static const String _prevPositionsKey = 'previous_subnet_positions';
+
+  static Future<List<Map<String, dynamic>>?> loadPreviousPositions() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonStr = prefs.getString(_prevPositionsKey);
+    if (jsonStr == null) return null;
+    try {
+      final list = jsonDecode(jsonStr) as List;
+      return list.map((e) => Map<String, dynamic>.from(e)).toList();
+    } catch (_) {
+      return null;
+    }
+  }
+
+  static Future<void> savePreviousPositions(List<Map<String, dynamic>> positions) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_prevPositionsKey, jsonEncode(positions));
+  }
+
   // Lead capture for Float Financial consulting
   static const String _leadsKey = 'consulting_leads';
   static const String _notificationsKey = 'app_notifications';

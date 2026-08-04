@@ -5,9 +5,17 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import "package:hive_flutter/hive_flutter.dart";
 import 'app.dart';
 import 'core/constants/app_config.dart';
+import 'shared/services/notification_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Local notifications (Android). Skipped on web — unsupported there.
+  if (!kIsWeb) {
+    try {
+      await NotificationService.initialize();
+    } catch (_) {}
+  }
 
   // Initialize Hive for local storage (AI Agents, etc.)
   try {

@@ -55,6 +55,27 @@ class SubnetPosition {
     );
   }
 
+  /// Serialize the fields the alert engine compares on
+  Map<String, dynamic> toJson() => {
+        'subnetId': subnetId,
+        'name': name,
+        'stakedTao': stakedTao,
+        'alphaBalance': alphaBalance,
+        'alphaPriceTao': alphaPriceTao,
+        'monthlyYieldTao': monthlyYieldTao,
+      };
+
+  /// Rebuild from [toJson] output
+  factory SubnetPosition.fromJson(Map<String, dynamic> json) =>
+      SubnetPosition.fromData(
+        subnetId: (json['subnetId'] as num).toInt(),
+        name: json['name'] as String? ?? 'SN${json['subnetId']}',
+        stakedTao: (json['stakedTao'] as num?)?.toDouble() ?? 0.0,
+        alphaBalance: (json['alphaBalance'] as num?)?.toDouble() ?? 0.0,
+        alphaPriceTao: (json['alphaPriceTao'] as num?)?.toDouble() ?? 0.0,
+        monthlyYieldTao: (json['monthlyYieldTao'] as num?)?.toDouble() ?? 0.0,
+      );
+
   /// Copy with new values (for state updates)
   SubnetPosition copyWith({
     int? subnetId,
