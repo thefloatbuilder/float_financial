@@ -112,6 +112,45 @@ class LocalStorageService {
     await prefs.remove(_snapshotsKey);
   }
 
+  static const String _dailyHistoryKey = 'portfolio_daily_history';
+
+  /// Load the daily portfolio value history (oldest first after sorting).
+  static Future<List<Map<String, dynamic>>> loadDailyHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonStr = prefs.getString(_dailyHistoryKey);
+    if (jsonStr == null) return [];
+    try {
+      final list = jsonDecode(jsonStr) as List;
+      final items = list.map((e) => Map<String, dynamic>.from(e)).toList();
+      items.sort((a, b) => (a['date'] as String? ?? '').compareTo(b['date'] as String? ?? ''));
+      return items;
+    } catch (_) {
+      return [];
+    }
+  }
+
+  /// Record today's portfolio total. One entry per calendar day — calling
+  /// again on the same day updates that day's value rather than duplicating.
+  static Future<void> recordDailyValue(double totalValue) async {
+    final prefs = await SharedPreferences.getInstance();
+    final history = await loadDailyHistory();
+    final today = DateTime.now().toIso8601String().substring(0, 10); // yyyy-MM-dd
+    final idx = history.indexWhere((e) => e['date'] == today);
+    final entry = {
+      'date': today,
+      'total_value': totalValue,
+      'recorded_at': DateTime.now().toIso8601String(),
+    };
+    if (idx >= 0) {
+      history[idx] = entry;
+    } else {
+      history.add(entry);
+    }
+    // Keep a rolling year
+    final trimmed = history.length > 365 ? history.sublist(history.length - 365) : history;
+    await prefs.setString(_dailyHistoryKey, jsonEncode(trimmed));
+  }
+
   static const String _coldkeyCacheKey = "coldkey_last_data";
 
   static Future<Map<String, dynamic>?> loadColdkeyCache() async {

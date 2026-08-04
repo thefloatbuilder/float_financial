@@ -2,10 +2,24 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/local_storage_service.dart';
 import '../widgets/portfolio_performance_chart.dart';
 
-/// Provider for portfolio performance data from snapshots
+/// Provider for portfolio performance data — real daily net worth history,
+/// falling back to snapshots, then demo data if nothing recorded yet.
 final performanceDataProvider = FutureProvider<List<PerformanceDataPoint>>((ref) async {
+  final history = await LocalStorageService.loadDailyHistory();
+
+  if (history.isNotEmpty) {
+    return [
+      for (final entry in history)
+        PerformanceDataPoint(
+          label: _formatDateLabel(DateTime.tryParse(entry['date'] as String? ?? '') ?? DateTime.now()),
+          value: (entry['total_value'] as num?)?.toDouble() ?? 0.0,
+          date: DateTime.tryParse(entry['date'] as String? ?? '') ?? DateTime.now(),
+        ),
+    ];
+  }
+
   final snapshots = await LocalStorageService.loadSnapshots();
-  
+
   if (snapshots.isEmpty) {
     // Return demo data showing growth
     final now = DateTime.now();

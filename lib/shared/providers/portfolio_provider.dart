@@ -76,6 +76,18 @@ class PortfolioNotifier extends StateNotifier<Map<String, dynamic>> {
     await _loadScopes();
   }
 
+  /// Real total = sum of holdings values + ROTH IRA total.
+  double computeTotalValue() {
+    final holdings = (state["holdings"] as List?)?.cast<Map<String, dynamic>>() ?? [];
+    final holdingsSum = holdings.fold<double>(0.0, (sum, h) {
+      // ROTH is represented by the roth_ira map; skip its holdings mirror to avoid double-count
+      if (h["name"] == "ROTH IRA") return sum;
+      return sum + ((h["value"] as num?)?.toDouble() ?? 0.0);
+    });
+    final rothTotal = ((state["roth_ira"] as Map?)?["total_usd"] as num?)?.toDouble() ?? 0.0;
+    return holdingsSum + rothTotal;
+  }
+
   Future<void> refreshColdkeyData() async {
     final fresh = await BittensorService().fetchColdkeyData();
 
@@ -91,15 +103,21 @@ class PortfolioNotifier extends StateNotifier<Map<String, dynamic>> {
       'source': fresh['source'],
     };
 
+    state = newState;
+
+    final total = computeTotalValue();
+    state = {...state, 'total_value': total};
+
     await LocalStorageService.saveSnapshot({
-      'total_value': newState['total_value'] ?? 152581.0,
+      'total_value': total,
       'monthly_change': fresh['monthly_change'],
       'daily_yield': fresh['daily_yield_estimate_usd'],
       'is_live': fresh['is_live'],
       'saved_at': DateTime.now().toIso8601String(),
     });
 
-    state = newState;
+    // One-per-day net worth history point
+    await LocalStorageService.recordDailyValue(total);
   }
 
   void createCustomScope(String name, List<String> assetNames, {double targetPct = 25.0}) {
