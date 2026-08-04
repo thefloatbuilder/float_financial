@@ -36,9 +36,12 @@ class FloatLogo extends StatefulWidget {
 }
 
 class _FloatLogoState extends State<FloatLogo> with TickerProviderStateMixin {
-  late AnimationController? _rippleController;
-  late AnimationController? _bubblesController;
-  late AnimationController? _logoController;
+  // Plain nullable fields, NOT `late`: when `animated` is false they are never
+  // assigned, and a `late` field throws LateInitializationError on ANY read —
+  // including `?.dispose()` — when the widget unmounts.
+  AnimationController? _rippleController;
+  AnimationController? _bubblesController;
+  AnimationController? _logoController;
 
   final List<_Bubble> _bubbles = [];
 

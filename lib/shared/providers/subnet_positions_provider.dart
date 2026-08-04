@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import '../models/subnet_position.dart';
+import '../utils/subnet_apy.dart';
 import '../utils/yield_alerts.dart';
 import '../utils/rebalance_engine.dart';
 
@@ -77,16 +78,8 @@ String _getSubnetName(int netuid) {
 }
 
 double _estimateMonthlyYield(int netuid, double stakedTao) {
-  // Estimated APY rates based on current subnet performance
-  double apy;
-  switch (netuid) {
-    case 0: apy = 0.125; break;  // Root ~12.5%
-    case 4: apy = 0.215; break;  // Targon ~21.5%
-    case 53: apy = 0.325; break; // Engy ~32.5%
-    case 64: apy = 0.175; break; // Chutes ~17.5%
-    default: apy = 0.15; break;  // Default 15%
-  }
-  return (stakedTao * apy) / 12;
+  // APY rates live in SubnetApy (single source of truth).
+  return (stakedTao * SubnetApy.getApy(netuid) / 100.0) / 12;
 }
 
 List<SubnetPosition> _getDemoPositions() {
