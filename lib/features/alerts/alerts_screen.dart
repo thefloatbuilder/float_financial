@@ -6,6 +6,7 @@ import '../../shared/providers/auth_provider.dart';
 import '../../shared/services/supabase_service.dart';
 import '../../shared/widgets/float_header.dart';
 import '../../shared/widgets/float_empty_state.dart';
+import '../../shared/widgets/app_loading.dart';
 
 class AlertsScreen extends ConsumerWidget {
   const AlertsScreen({super.key});
@@ -90,7 +91,7 @@ class AlertsScreen extends ConsumerWidget {
                 },
               );
             },
-            loading: () => const Center(child: CircularProgressIndicator()),
+            loading: () => const ShimmerList(itemCount: 3, itemHeight: 84),
             error: (error, stack) => Center(child: Text('Error: $error')),
           ),
           floatingActionButton: FloatingActionButton.extended(
@@ -101,7 +102,7 @@ class AlertsScreen extends ConsumerWidget {
           ),
         );
       },
-      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      loading: () => const Scaffold(body: Center(child: AppLoading())),
       error: (error, stack) => Scaffold(body: Center(child: Text('Error: $error'))),
     );
   }

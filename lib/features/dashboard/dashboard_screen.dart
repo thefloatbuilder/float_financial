@@ -12,6 +12,7 @@ import '../../shared/widgets/yield_alert_banner.dart';
 import '../../shared/widgets/rebalance_dialog.dart';
 import '../../shared/widgets/lead_capture_form.dart';
 import '../../shared/widgets/portfolio_performance_chart.dart';
+import '../../shared/widgets/app_loading.dart';
 import '../../shared/widgets/admin_leads_view.dart';
 import '../../shared/utils/leads_exporter.dart';
 
@@ -285,16 +286,7 @@ class DashboardScreen extends ConsumerWidget {
                     );
                   },
                 ),
-                loading: () => Container(
-                  padding: const EdgeInsets.all(40),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? AppColors.moonlightSurface
-                        : Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Center(child: CircularProgressIndicator()),
-                ),
+                loading: () => const ShimmerCard(height: 180),
                 error: (_, __) => const SizedBox.shrink(),
               );
             },
@@ -397,16 +389,7 @@ class DashboardScreen extends ConsumerWidget {
                   dataPoints: dataPoints,
                   title: 'Portfolio Performance',
                 ),
-                loading: () => Container(
-                  padding: const EdgeInsets.all(40),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? AppColors.moonlightSurface
-                        : Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Center(child: CircularProgressIndicator()),
-                ),
+                loading: () => const ShimmerCard(height: 180),
                 error: (_, __) => const SizedBox.shrink(),
               );
             },

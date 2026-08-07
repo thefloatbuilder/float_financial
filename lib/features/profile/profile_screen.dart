@@ -8,6 +8,7 @@ import '../../shared/providers/theme_provider.dart';
 import '../../shared/services/supabase_service.dart';
 import '../../shared/widgets/float_logo.dart';
 import '../../shared/widgets/float_header.dart';
+import '../../shared/widgets/app_loading.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -155,7 +156,7 @@ class ProfileScreen extends ConsumerWidget {
             ),
           );
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const Center(child: AppLoading()),
         error: (error, _) => Center(child: Text('Error: $error')),
       ),
     );
