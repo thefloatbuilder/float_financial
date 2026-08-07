@@ -1,6 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:float_financial/shared/services/bittensor_service.dart';
+import 'package:float_financial/shared/services/evm_wallet_service.dart';
 import 'package:float_financial/shared/services/local_storage_service.dart';
+
+/// Paul's loan wallet on Base — read-only tracking, value rolls into net worth.
+const String kLoanWalletAddress = '0xDa1FC59C8A889e15CA4812161761eaB0e8aA2Fe6';
+const String kLoanWalletLabel = 'Base Loan Wallet';
 
 final portfolioProvider = StateNotifierProvider<PortfolioNotifier, Map<String, dynamic>>((ref) => PortfolioNotifier());
 
@@ -73,7 +78,76 @@ class PortfolioNotifier extends StateNotifier<Map<String, dynamic>> {
       }
     }
     await refreshColdkeyData();
+    await refreshEvmWallets();
     await _loadScopes();
+  }
+
+  /// Fetch live balances for all tracked EVM wallets (Base) and mirror them
+  /// into holdings so net worth includes them. Never throws.
+  Future<void> refreshEvmWallets() async {
+    final service = EvmWalletService();
+
+    // Ensure the loan wallet is tracked
+    await service.trackWallet(kLoanWalletAddress, kLoanWalletLabel);
+    final wallets = await service.loadTrackedWallets();
+
+    final walletData = <Map<String, dynamic>>[];
+    final llPositions = <Map<String, dynamic>>[];
+    for (final w in wallets) {
+      final data = await service.fetchWallet(
+        w['address'] as String,
+        label: w['label'] as String? ?? 'Base Wallet',
+      );
+      walletData.add(data);
+
+      // Liquid Loans staked position (LOAN sits in the staking contract,
+      // not the wallet, so it needs its own read)
+      final ll = await service.fetchLiquidLoansPosition(w['address'] as String);
+      if (ll != null) {
+        ll['address'] = w['address'];
+        llPositions.add(ll);
+      }
+    }
+
+    // Mirror into holdings: one entry per wallet + one per LL position,
+    // replaced on each refresh
+    final holdings = List<Map<String, dynamic>>.from(state['holdings'] ?? []);
+    holdings.removeWhere((h) => h['source'] == 'base_rpc' || h['source'] == 'liquid_loans');
+    for (final data in walletData) {
+      holdings.add({
+        'name': data['label'],
+        'value': (data['total_usd'] as num).toDouble(),
+        'color': 0xFF0052FF, // Base blue
+        'source': 'base_rpc',
+        'address': data['address'],
+        'assets': data['assets'],
+        'is_live': data['is_live'],
+      });
+    }
+    for (final ll in llPositions) {
+      holdings.add({
+        'name': 'LOAN Staked (Liquid Loans)',
+        'value': (ll['total_usd'] as num).toDouble(),
+        'color': 0xFF8B5CF6, // purple, matches LL brand
+        'source': 'liquid_loans',
+        'address': ll['address'],
+        'staked_loan': ll['staked_loan'],
+        'pending_usdl': ll['pending_usdl'],
+        'loan_price_source': ll['loan_price_source'],
+        'is_live': true,
+      });
+    }
+
+    state = {
+      ...state,
+      'holdings': holdings,
+      'evm_wallets': walletData,
+      'liquid_loans': llPositions,
+    };
+    await LocalStorageService.saveEvmWalletCache({'wallets': walletData, 'liquid_loans': llPositions});
+
+    final total = computeTotalValue();
+    state = {...state, 'total_value': total};
   }
 
   /// Real total = sum of holdings values + ROTH IRA total.

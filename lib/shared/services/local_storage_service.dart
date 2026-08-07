@@ -153,6 +153,56 @@ class LocalStorageService {
 
   static const String _coldkeyCacheKey = "coldkey_last_data";
 
+  // Tracked EVM wallets (Base chain, read-only)
+  static const String _evmWalletsKey = 'evm_tracked_wallets';
+  static const String _evmWalletCacheKey = 'evm_wallet_data';
+
+  static Future<List<Map<String, dynamic>>> loadEvmWallets() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonStr = prefs.getString(_evmWalletsKey);
+    if (jsonStr == null) return [];
+    try {
+      final list = jsonDecode(jsonStr) as List;
+      return list.map((e) => Map<String, dynamic>.from(e)).toList();
+    } catch (_) {
+      return [];
+    }
+  }
+
+  static Future<void> saveEvmWallets(List<Map<String, dynamic>> wallets) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_evmWalletsKey, jsonEncode(wallets));
+  }
+
+  static Future<Map<String, dynamic>?> loadEvmWalletCache() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonStr = prefs.getString(_evmWalletCacheKey);
+    if (jsonStr == null) return null;
+    try {
+      return jsonDecode(jsonStr) as Map<String, dynamic>;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  static Future<void> saveEvmWalletCache(Map<String, dynamic> data) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_evmWalletCacheKey, jsonEncode(data));
+  }
+
+  // Manual LOAN price override (protocol-internal token, no public Base market)
+  static const String _loanPriceKey = 'loan_price_usd';
+
+  static Future<double?> loadLoanPrice() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getDouble(_loanPriceKey);
+  }
+
+  static Future<void> saveLoanPrice(double price) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble(_loanPriceKey, price);
+  }
+
   static Future<Map<String, dynamic>?> loadColdkeyCache() async {
     final prefs = await SharedPreferences.getInstance();
     final jsonStr = prefs.getString(_coldkeyCacheKey);

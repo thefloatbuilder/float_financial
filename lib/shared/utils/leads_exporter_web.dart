@@ -8,7 +8,7 @@ String downloadCsvWeb(String csv) {
     final bytes = utf8.encode(csv);
     final blob = html.Blob([bytes], 'text/csv');
     final url = html.Url.createObjectUrlFromBlob(blob);
-    final anchor = html.AnchorElement(href: url)
+    html.AnchorElement(href: url)
       ..setAttribute('download', 'float_financial_leads_${DateTime.now().toIso8601String().split('T')[0]}.csv')
       ..click();
     html.Url.revokeObjectUrl(url);
