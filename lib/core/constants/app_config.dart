@@ -10,9 +10,17 @@
 /// screen shows a demo-mode banner. Production builds MUST pass real
 /// credentials — [AppConfig.assertProductionReady] guards this.
 class AppConfig {
-  static const String supabaseUrl = String.fromEnvironment('SUPABASE_URL');
+  // Real project credentials (Paul's float-financial project, created 2026-08-06).
+  // These are PUBLIC client credentials — safe to ship. The anon key is only
+  // usable with Row-Level Security policies; never put the service_role key here.
+  static const String _defaultUrl = 'https://spzpumfmrtnqcoahzzub.supabase.co';
+  static const String _defaultAnonKey =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNwenB1bWZtcnRucWNvYWh6enViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5Mjc2MDgsImV4cCI6MjEwMDUwMzYwOH0.0bbXvIXl80nBLjAEwOmyOtsUsS2Vhc3KkFXoTzYMZ1E';
+
+  static const String supabaseUrl =
+      String.fromEnvironment('SUPABASE_URL', defaultValue: _defaultUrl);
   static const String supabaseAnonKey =
-      String.fromEnvironment('SUPABASE_ANON_KEY');
+      String.fromEnvironment('SUPABASE_ANON_KEY', defaultValue: _defaultAnonKey);
 
   /// True when real Supabase credentials were provided at build time.
   static bool get hasSupabaseCredentials =>
