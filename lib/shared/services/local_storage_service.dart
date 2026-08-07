@@ -7,6 +7,18 @@ import 'dart:convert';
 class LocalStorageService {
   static const String _rothKey = 'roth_ira_data';
   static const String _snapshotsKey = 'portfolio_snapshots';
+  static const String _onboardedKey = 'has_completed_onboarding';
+
+  /// Whether this device has already seen the onboarding flow.
+  static Future<bool> hasCompletedOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_onboardedKey) ?? false;
+  }
+
+  static Future<void> markOnboardingComplete() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_onboardedKey, true);
+  }
 
   static Future<Map<String, dynamic>?> loadRothIra() async {
     final prefs = await SharedPreferences.getInstance();

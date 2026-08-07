@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../shared/widgets/float_logo.dart';
 import '../../core/constants/app_colors.dart';
+import '../../shared/services/local_storage_service.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -49,12 +50,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         curve: Curves.easeInOut,
       );
     } else {
-      context.go('/home');
+      _finish();
     }
   }
 
+  Future<void> _finish() async {
+    await LocalStorageService.markOnboardingComplete();
+    if (mounted) context.go('/home');
+  }
+
   void _skip() {
-    context.go('/home');
+    _finish();
   }
 
   @override

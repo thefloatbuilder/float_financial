@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:float_financial/shared/services/bittensor_service.dart';
 import 'package:float_financial/shared/services/evm_wallet_service.dart';
 import 'package:float_financial/shared/services/local_storage_service.dart';
+import 'package:float_financial/shared/services/supabase_service.dart';
 
 /// Paul's loan wallet on Base — read-only tracking, value rolls into net worth.
 const String kLoanWalletAddress = '0xDa1FC59C8A889e15CA4812161761eaB0e8aA2Fe6';
@@ -78,6 +79,26 @@ class PortfolioNotifier extends StateNotifier<Map<String, dynamic>> {
     await refreshColdkeyData();
     await refreshEvmWallets();
     await _loadScopes();
+    await _syncToSupabase();
+  }
+
+  /// Persist the current portfolio snapshot to Supabase so the same data
+  /// loads on any device. Silent no-op in demo mode / when signed out.
+  Future<void> _syncToSupabase() async {
+    try {
+      final userId = SupabaseService.currentUserId;
+      if (userId == null) return;
+      await SupabaseService.saveUserPortfolio(userId, {
+        'total_value': state['total_value'],
+        'monthly_change': state['monthly_change'],
+        'daily_yield_estimate_usd': state['daily_yield_estimate_usd'],
+        'roth_ira': state['roth_ira'],
+        'holdings': state['holdings'],
+        'is_live': state['is_live'],
+      });
+    } catch (_) {
+      // Never let a sync failure break the app.
+    }
   }
 
   /// Keep the ROTH holdings mirror in sync with the roth_ira map (single

@@ -6,6 +6,7 @@ import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_config.dart';
 import '../../shared/widgets/float_logo.dart';
 import '../../shared/services/supabase_service.dart';
+import '../../shared/services/local_storage_service.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -86,7 +87,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (!mounted) return;
       if (AppConfig.isDemoMode || response.session != null) {
         // Demo mode, or email confirmation disabled — session issued.
-        context.go('/home');
+        if (!mounted) return;
+        // First-run: new accounts see onboarding before the dashboard.
+        final seen = await LocalStorageService.hasCompletedOnboarding();
+        if (!mounted) return;
+        context.go(seen ? '/home' : '/onboarding');
       } else {
         // Email confirmation enabled on the project — tell the user to verify.
         setState(() {
@@ -282,6 +287,38 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                 ),
                 const SizedBox(height: 12),
+                if (!AppConfig.isDemoMode) ...[
+                  OutlinedButton.icon(
+                    onPressed: _isLoading
+                        ? null
+                        : () async {
+                            setState(() {
+                              _isLoading = true;
+                              _errorMessage = null;
+                            });
+                            try {
+                              // Redirects to Google and back; router's auth
+                              // listener routes to /home on return.
+                              await SupabaseService.signInWithGoogle();
+                            } catch (_) {
+                              if (mounted) {
+                                setState(() => _errorMessage = 'Google sign-in failed. Try again.');
+                              }
+                            } finally {
+                              if (mounted) setState(() => _isLoading = false);
+                            }
+                          },
+                    icon: const Text('G', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+                    label: const Text('Continue with Google', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.white54, width: 1.5),
+                      minimumSize: const Size(double.infinity, 52),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                ],
                 TextButton(
                   onPressed: _isLoading
                       ? null

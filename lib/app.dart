@@ -88,7 +88,19 @@ final GoRouter _router = GoRouter(
     GoRoute(path: '/splash', builder: (context, state) => const SplashScreen()),
     GoRoute(path: '/', builder: (context, state) => const LoginScreen()),
     GoRoute(path: '/home', builder: (context, state) => const MainNavigationScreen()),
-    GoRoute(path: '/admin', builder: (context, state) => const AdminDashboardScreen()),
+    GoRoute(
+      path: '/admin',
+      builder: (context, state) => const AdminDashboardScreen(),
+      // Admin-only: non-admins bounce home. RLS also protects the data;
+      // this guard just keeps the screen itself out of reach.
+      redirect: (context, state) {
+        if (AppConfig.isDemoMode) return null;
+        final user = Supabase.instance.client.auth.currentUser;
+        if (user == null) return '/';
+        final role = user.userMetadata?['role'] as String?;
+        return role == 'admin' ? null : '/home';
+      },
+    ),
     GoRoute(path: '/onboarding', builder: (context, state) => const OnboardingScreen()),
     GoRoute(path: '/reports', builder: (context, state) => const ReportsScreen()),
     // Debug-only direct routes — excluded from release builds.

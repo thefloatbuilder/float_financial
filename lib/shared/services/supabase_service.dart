@@ -175,6 +175,17 @@ class SupabaseService {
     await client.auth.signOut();
   }
 
+  /// Google OAuth — on web this redirects the whole page to Google and
+  /// back; session is picked up automatically on return.
+  static Future<void> signInWithGoogle() async {
+    final client = _clientOrNull;
+    if (client == null) {
+      debugPrint('DEMO: Simulated Google sign-in');
+      return;
+    }
+    await client.auth.signInWithOAuth(OAuthProvider.google);
+  }
+
   /// Resend the signup confirmation email (used when the project has
   /// email confirmation enabled and the user didn't get the first one).
   static Future<void> resendConfirmationEmail(String email) async {
@@ -184,6 +195,13 @@ class SupabaseService {
   }
 
   // User Profile
+  /// Currently signed-in user's ID, or null in demo mode / signed out.
+  static String? get currentUserId {
+    final client = _clientOrNull;
+    if (client == null) return null;
+    return client.auth.currentUser?.id;
+  }
+
   static Future<UserModel?> getCurrentUser() async {
     final client = _clientOrNull;
     if (client == null) return _demoUser;
@@ -251,6 +269,22 @@ class SupabaseService {
     }
   }
 
+  /// Persist the user's portfolio snapshot (holdings, ROTH, totals) so it's
+  /// the same on every device. No-op in demo mode. Never throws.
+  static Future<void> saveUserPortfolio(String userId, Map<String, dynamic> data) async {
+    final client = _clientOrNull;
+    if (client == null) return;
+    try {
+      await client.from('portfolios').upsert({
+        'user_id': userId,
+        ...data,
+        'updated_at': DateTime.now().toIso8601String(),
+      });
+    } catch (e) {
+      debugPrint('Portfolio sync failed (will retry next session): $e');
+    }
+  }
+
   // Admin - Get all clients
   static Future<List<Map<String, dynamic>>> getAllClients() async {
     final client = _clientOrNull;
@@ -258,10 +292,11 @@ class SupabaseService {
 
     try {
       final data = await client.from('profiles').select().order('created_at', ascending: false);
-      final list = List<Map<String, dynamic>>.from(data);
-      return list.isEmpty ? _demoClients : list;
+      // RLS limits this to what the caller may see; never serve fake clients
+      // to a real signed-in user.
+      return List<Map<String, dynamic>>.from(data);
     } catch (_) {
-      return _demoClients;
+      return const [];
     }
   }
 }
