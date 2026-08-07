@@ -204,7 +204,8 @@ class SupabaseService {
           .order('created_at', ascending: false);
       return (data as List).map((json) => AlertModel.fromJson(json)).toList();
     } catch (_) {
-      return _demoAlerts;
+      // Real backend but query failed — show nothing rather than fake alerts.
+      return const [];
     }
   }
 
@@ -236,9 +237,9 @@ class SupabaseService {
           .select()
           .eq('user_id', userId)
           .maybeSingle();
-      return data ?? _demoPortfolio;
+      return data; // null → provider seeds real first-login positions
     } catch (_) {
-      return _demoPortfolio;
+      return null;
     }
   }
 

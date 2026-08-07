@@ -17,13 +17,25 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _nameController = TextEditingController();
   bool _isLoading = false;
+  bool _isSignUpMode = false;
   String? _errorMessage;
+  String? _infoMessage;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _nameController.dispose();
+    super.dispose();
+  }
 
   Future<void> _signIn() async {
     setState(() {
       _isLoading = true;
       _errorMessage = null;
+      _infoMessage = null;
     });
 
     try {
@@ -33,8 +45,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       );
       if (mounted) context.go('/home');
     } catch (e) {
+      debugPrint('SIGNIN ERROR: $e');
+      if (!mounted) return;
+      final msg = e.toString().toLowerCase();
       setState(() {
-        _errorMessage = 'Login failed. Please check your credentials.';
+        if (msg.contains('invalid login credentials') || msg.contains('invalid_credentials')) {
+          _errorMessage = 'Wrong email or password.';
+        } else if (msg.contains('email not confirmed')) {
+          _errorMessage = 'Check your inbox — confirm your email first.';
+        } else {
+          _errorMessage = 'Sign-in failed. Check your connection and try again.';
+        }
       });
     } finally {
       if (mounted) {
@@ -47,26 +68,44 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     setState(() {
       _isLoading = true;
       _errorMessage = null;
+      _infoMessage = null;
     });
 
     try {
-      // Force name to "Marcus" for this flow
-      final name = 'Marcus';
-      await SupabaseService.signUpWithEmail(
+      final name = _nameController.text.trim().isEmpty
+          ? _emailController.text.split('@').first
+          : _nameController.text.trim();
+      final response = await SupabaseService.signUpWithEmail(
         _emailController.text.trim(),
         _passwordController.text.trim(),
         name,
       );
-      if (mounted) {
-        // In demo mode we bypass the "check email" step and go straight in
+      if (!mounted) return;
+      if (AppConfig.isDemoMode || response.session != null) {
+        // Demo mode, or email confirmation disabled — session issued.
         context.go('/home');
+      } else {
+        // Email confirmation enabled on the project — tell the user to verify.
+        setState(() {
+          _isSignUpMode = false;
+          _infoMessage = 'Account created! Confirm your email, then sign in.';
+        });
       }
     } catch (e) {
-      debugPrint('SIGNUP ERROR (demo): $e');
-      // For demo mode, force through even if there's an error
-      if (mounted) {
-        context.go('/home');
-      }
+      debugPrint('SIGNUP ERROR: $e');
+      if (!mounted) return;
+      final msg = e.toString().toLowerCase();
+      setState(() {
+        if (msg.contains('already registered') || msg.contains('user_already_exists')) {
+          _errorMessage = 'That email is already registered — try signing in.';
+        } else if (msg.contains('password')) {
+          _errorMessage = 'Password too weak — use at least 6 characters.';
+        } else if (msg.contains('email')) {
+          _errorMessage = 'That doesn\'t look like a valid email address.';
+        } else {
+          _errorMessage = 'Sign-up failed. Check your connection and try again.';
+        }
+      });
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -126,6 +165,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ],
                 const SizedBox(height: 48),
 
+                if (_isSignUpMode) ...[
+                  TextField(
+                    controller: _nameController,
+                    decoration: InputDecoration(
+                      hintText: 'Name',
+                      filled: true,
+                      fillColor: isDark ? AppColors.moonlightSurface : Colors.white,
+                      hintStyle: TextStyle(color: isDark ? AppColors.moonlightSilver : null),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    style: TextStyle(color: isDark ? AppColors.moonlightText : null),
+                  ),
+                  const SizedBox(height: 16),
+                ],
                 TextField(
                   controller: _emailController,
                   decoration: InputDecoration(
@@ -158,15 +214,28 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                if (_errorMessage != null)
-                  Text(
-                    _errorMessage!,
-                    style: const TextStyle(color: Colors.redAccent),
+                if (_infoMessage != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Text(
+                      _infoMessage!,
+                      style: const TextStyle(color: Colors.lightGreenAccent, fontWeight: FontWeight.w600),
+                    ),
                   ),
-                const SizedBox(height: 12),
+                if (_errorMessage != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Text(
+                      _errorMessage!,
+                      style: const TextStyle(color: Colors.redAccent),
+                    ),
+                  ),
+                const SizedBox(height: 4),
 
                 ElevatedButton(
-                  onPressed: _isLoading ? null : _signIn,
+                  onPressed: _isLoading
+                      ? null
+                      : (_isSignUpMode ? _signUp : _signIn),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: isDark ? AppColors.moonlightAccent : Colors.white,
                     foregroundColor: isDark ? AppColors.moonlightBackground : AppColors.deepNavy,
@@ -175,13 +244,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   child: _isLoading
                       ? const CircularProgressIndicator(color: AppColors.primaryTeal)
-                      : const Text('Sign In', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                      : Text(_isSignUpMode ? 'Create Account' : 'Sign In',
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                 ),
                 const SizedBox(height: 12),
                 TextButton(
-                  onPressed: _isLoading ? null : _signUp,
+                  onPressed: _isLoading
+                      ? null
+                      : () => setState(() {
+                            _isSignUpMode = !_isSignUpMode;
+                            _errorMessage = null;
+                            _infoMessage = null;
+                          }),
                   child: Text(
-                    'Create Account',
+                    _isSignUpMode ? 'Already have an account? Sign in' : 'Create Account',
                     style: TextStyle(color: isDark ? AppColors.moonlightText : Colors.white, fontSize: 16),
                   ),
                 ),
