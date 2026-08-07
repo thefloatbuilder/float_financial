@@ -11,35 +11,28 @@ final portfolioProvider = StateNotifierProvider<PortfolioNotifier, Map<String, d
 
 class PortfolioNotifier extends StateNotifier<Map<String, dynamic>> {
   PortfolioNotifier() : super({
-    'total_value': 152581.0,
-    'total_stake': 142.5,
-    'daily_yield_estimate_usd': 412.0,
-    'monthly_change': 12.4,
-    'apy': 8.7,
+    'total_value': 0.0,
+    'total_stake': 0.0,
+    'daily_yield_estimate_usd': 0.0,
+    'monthly_change': 0.0,
+    'apy': 0.0,
     'last_updated': DateTime.now().toIso8601String(),
     'is_live': false,
-    'source': 'demo',
+    'source': 'initializing',
     'coldkey_data': {},
     'roth_ira': {
       'btc_amount': 0.07398868,
-      'xrp_amount': 808.88,
-      'total_usd': 5528.68,
+      'xrp_amount': 804.88,
+      'total_usd': 9781.01,
     },
+    // Real positions are mirrored in by refreshColdkeyData/refreshEvmWallets —
+    // no fake exchange holdings. First login shows live-tracked assets only.
     'holdings': [
-      {'name': 'Coldkey TAO', 'value': 130000.0, 'color': 0xFF14B8A6, 'source': 'Coldkey'},
-      {'name': 'ROTH IRA', 'value': 5528.68, 'color': 0xFFF97316, 'source': 'Manual'},
-      {'name': 'BTC', 'value': 5200.0, 'color': 0xFFF59E0B, 'source': 'Coinbase'},
-      {'name': 'XRP', 'value': 4581.0, 'color': 0x3B82F6, 'source': 'Kraken'},
-      {'name': 'ETH', 'value': 3019.0, 'color': 0x8B5CF6, 'source': 'Binance'},
+      {'name': 'ROTH IRA', 'value': 9781.01, 'color': 0xFFF97316, 'source': 'Manual'},
     ],
     'custom_scopes': [],
   }) {
     loadPortfolio();
-    // Seed demo exchange scopes
-    if ((state["custom_scopes"] as List?)?.isEmpty ?? true) {
-      createExchangeScope("Coinbase", ["BTC", "ETH"]);
-      createExchangeScope("Kraken", ["XRP", "BTC"]);
-    }
   }
 
   static const Map<String, Map<String, dynamic>> exchangeMeta = {
@@ -63,23 +56,38 @@ class PortfolioNotifier extends StateNotifier<Map<String, dynamic>> {
 
   Future<void> loadPortfolio() async {
     final stored = await LocalStorageService.loadROTH();
+    const realRoth = {
+      'btc_amount': 0.07398868,
+      'xrp_amount': 804.88,
+      'total_usd': 9781.01,
+    };
     if (stored != null) {
-      // Check if stored data has old XRP amount — force update to real values
-      if (stored['xrp_amount'] != 808.88) {
-        final updated = {
-          'btc_amount': 0.07398868,
-          'xrp_amount': 808.88,
-          'total_usd': 5528.68,
-        };
-        state = {...state, 'roth_ira': updated};
-        await LocalStorageService.saveROTH(updated);
+      // Correct any stale stored values to Paul's real ROTH balances
+      if (stored['xrp_amount'] != 804.88 || stored['total_usd'] != 9781.01) {
+        state = {...state, 'roth_ira': realRoth};
+        await LocalStorageService.saveROTH(realRoth);
       } else {
         state = {...state, 'roth_ira': stored};
       }
+    } else {
+      // First login: seed the ROTH so it's never empty
+      state = {...state, 'roth_ira': realRoth};
+      await LocalStorageService.saveROTH(realRoth);
     }
+    _syncRothHolding();
     await refreshColdkeyData();
     await refreshEvmWallets();
     await _loadScopes();
+  }
+
+  /// Keep the ROTH holdings mirror in sync with the roth_ira map (single
+  /// source of truth). The mirror exists so allocation charts show it.
+  void _syncRothHolding() {
+    final rothTotal = ((state['roth_ira'] as Map?)?['total_usd'] as num?)?.toDouble() ?? 0.0;
+    final holdings = List<Map<String, dynamic>>.from(state['holdings'] ?? []);
+    holdings.removeWhere((h) => h['name'] == 'ROTH IRA');
+    holdings.add({'name': 'ROTH IRA', 'value': rothTotal, 'color': 0xFFF97316, 'source': 'Manual'});
+    state = {...state, 'holdings': holdings};
   }
 
   /// Fetch live balances for all tracked EVM wallets (Base) and mirror them
@@ -165,8 +173,33 @@ class PortfolioNotifier extends StateNotifier<Map<String, dynamic>> {
   Future<void> refreshColdkeyData() async {
     final fresh = await BittensorService().fetchColdkeyData();
 
+    // Mirror live TAO subnet positions into holdings so net worth + charts
+    // show real staked value instead of placeholders.
+    double taoUsd = 0.0;
+    final positions = await fetchLiveSubnetPositions();
+    final holdings = List<Map<String, dynamic>>.from(state['holdings'] ?? []);
+    holdings.removeWhere((h) => h['source'] == 'bittensor_live');
+    if (positions != null && positions.isNotEmpty) {
+      final taoPrice = fresh['tao_price_usd'] as double?;
+      for (final p in positions) {
+        final valueTao = (p['current_value_tao'] as num).toDouble();
+        holdings.add({
+          'name': '${p['name']} (SN${p['netuid']})',
+          'value': taoPrice != null ? valueTao * taoPrice : valueTao,
+          'value_tao': valueTao,
+          'color': 0xFF14B8A6,
+          'source': 'bittensor_live',
+          'is_live': true,
+        });
+      }
+      if (taoPrice != null) {
+        taoUsd = positions.fold<double>(0.0, (s, p) => s + (p['current_value_tao'] as num).toDouble()) * taoPrice;
+      }
+    }
+
     final newState = {
       ...state,
+      'holdings': holdings,
       'coldkey_data': fresh,
       'total_stake': fresh['total_stake'],
       'daily_yield_estimate_usd': fresh['daily_yield_estimate_usd'],
@@ -175,6 +208,7 @@ class PortfolioNotifier extends StateNotifier<Map<String, dynamic>> {
       'last_updated': fresh['last_updated'],
       'is_live': fresh['is_live'],
       'source': fresh['source'],
+      if (taoUsd > 0) 'tao_total_usd': taoUsd,
     };
 
     state = newState;
