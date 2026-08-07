@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../dashboard/dashboard_screen.dart';
 import '../portfolio/portfolio_screen.dart';
+import '../connections/connections_screen.dart';
 import '../alerts/alerts_screen.dart';
 import '../reports/reports_screen.dart';
-import '../agents/ai_agents_screen.dart';
 import '../profile/profile_screen.dart';
 import '../../core/constants/app_colors.dart';
 
@@ -20,10 +20,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   final List<Widget> _screens = const [
     DashboardScreen(),
     PortfolioScreen(),
+    ConnectionsScreen(),
     ReportsScreen(),
     AlertsScreen(),
-    AIAgentsScreen(),
     ProfileScreen(),
+    // AIAgentsScreen stays implemented but off the nav (experimental feature).
   ];
 
   @override
@@ -66,16 +67,16 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             label: 'Portfolio',
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.link),
+            label: 'Connect',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.assessment),
             label: 'Reports',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.notifications),
             label: 'Alerts',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.smart_toy),
-            label: 'Agents',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

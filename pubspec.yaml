@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   http: ^1.2.2  # for real Bittensor data fetching (taostats / public RPC)
+  crypto: ^3.0.3  # HMAC signing for exchange API keys (Kraken/Binance/Gemini)
   shared_preferences: ^2.2.0  # local persistence for ROTH edits and snapshots
   flutter:
     sdk: flutter

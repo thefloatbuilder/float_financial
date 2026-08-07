@@ -3,6 +3,9 @@ import 'package:float_financial/shared/services/bittensor_service.dart';
 import 'package:float_financial/shared/services/evm_wallet_service.dart';
 import 'package:float_financial/shared/services/local_storage_service.dart';
 import 'package:float_financial/shared/services/supabase_service.dart';
+import 'package:float_financial/shared/services/connection_service.dart';
+import 'package:float_financial/shared/services/connection_balance_service.dart';
+import 'package:flutter/foundation.dart';
 
 /// Paul's loan wallet on Base — read-only tracking, value rolls into net worth.
 const String kLoanWalletAddress = '0xDa1FC59C8A889e15CA4812161761eaB0e8aA2Fe6';
@@ -78,8 +81,56 @@ class PortfolioNotifier extends StateNotifier<Map<String, dynamic>> {
     _syncRothHolding();
     await refreshColdkeyData();
     await refreshEvmWallets();
+    await refreshConnections();
     await _loadScopes();
     await _syncToSupabase();
+  }
+
+  /// Pull balances for every connected platform (addresses + exchanges) and
+  /// mirror them into holdings so net worth covers everything. Never throws.
+  Future<void> refreshConnections() async {
+    try {
+      final connections = await ConnectionService.loadConnections();
+      if (connections.isEmpty) return;
+
+      final holdings = List<Map<String, dynamic>>.from(state['holdings'] ?? []);
+      holdings.removeWhere((h) => h['source'] == 'user_connection');
+      final balances = <Map<String, dynamic>>[];
+
+      for (final c in connections) {
+        try {
+          final data = c.tier == ConnectionTier.address
+              ? await ConnectionBalanceService.fetchAddressBalance(c)
+              : await ConnectionBalanceService.fetchExchangeBalance(c);
+          balances.add({...data, 'platform_id': c.platformId});
+          final total = (data['total_usd'] as num?)?.toDouble() ?? 0.0;
+          if (total > 0 || data['is_live'] == true) {
+            holdings.add({
+              'name': c.label,
+              'value': total,
+              'color': 0xFF0EA5E9, // sky blue for connected accounts
+              'source': 'user_connection',
+              'platform_id': c.platformId,
+              'assets': data['assets'],
+              'is_live': data['is_live'],
+            });
+          }
+        } catch (e) {
+          // One bad connection must not kill the rest.
+          debugPrint('Connection refresh failed for ${c.label}: $e');
+        }
+      }
+
+      state = {
+        ...state,
+        'holdings': holdings,
+        'connection_balances': balances,
+      };
+      final total = computeTotalValue();
+      state = {...state, 'total_value': total};
+    } catch (_) {
+      // Never break loadPortfolio on connection failures.
+    }
   }
 
   /// Persist the current portfolio snapshot to Supabase so the same data
