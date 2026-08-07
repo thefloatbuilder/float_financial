@@ -77,17 +77,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: isDark ? AppColors.moonlightGradient : AppColors.sunlightGradient,
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(height: 40),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return Container(
+            decoration: BoxDecoration(
+              gradient: isDark ? AppColors.moonlightGradient : AppColors.sunlightGradient,
+            ),
+            child: SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight - MediaQuery.of(context).padding.vertical),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
                 FloatLogo(
                   size: 118,
                   animated: false,
@@ -181,10 +185,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     style: TextStyle(color: isDark ? AppColors.moonlightText : Colors.white, fontSize: 16),
                   ),
                 ),
-              ],
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
