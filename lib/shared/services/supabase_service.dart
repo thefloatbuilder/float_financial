@@ -175,6 +175,14 @@ class SupabaseService {
     await client.auth.signOut();
   }
 
+  /// Resend the signup confirmation email (used when the project has
+  /// email confirmation enabled and the user didn't get the first one).
+  static Future<void> resendConfirmationEmail(String email) async {
+    final client = _clientOrNull;
+    if (client == null) return;
+    await client.auth.resend(type: OtpType.signup, email: email);
+  }
+
   // User Profile
   static Future<UserModel?> getCurrentUser() async {
     final client = _clientOrNull;

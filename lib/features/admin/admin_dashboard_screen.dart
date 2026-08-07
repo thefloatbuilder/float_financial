@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/constants/app_colors.dart';
 import '../../shared/providers/admin_clients_provider.dart';
 import '../../shared/widgets/float_header.dart';
+import '../../shared/widgets/app_loading.dart';
+import '../../shared/widgets/float_error_state.dart';
 import 'client_detail_screen.dart';
 
 class AdminDashboardScreen extends ConsumerWidget {
@@ -100,8 +102,10 @@ class AdminDashboardScreen extends ConsumerWidget {
                   },
                 );
               },
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, _) => Center(child: Text('Error: $error')),
+              loading: () => const Center(child: AppLoading()),
+              error: (_, __) => FloatErrorState(
+                onRetry: () => ref.invalidate(adminClientsProvider),
+              ),
             ),
           ),
         ],

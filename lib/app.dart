@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -25,12 +27,41 @@ bool get _hasSupabaseSession {
   }
 }
 
+/// Bridges Supabase auth state changes into GoRouter's refresh mechanism so
+/// route guards re-evaluate the moment a user signs in or out — without this,
+/// the redirect only runs on explicit navigation and sign-out can leave the
+/// user stranded on an authed screen (and vice versa).
+class _AuthRefreshNotifier extends ChangeNotifier {
+  _AuthRefreshNotifier() {
+    if (!AppConfig.isDemoMode) {
+      try {
+        _sub = Supabase.instance.client.auth.onAuthStateChange.listen((_) {
+          notifyListeners();
+        });
+      } catch (_) {
+        // Supabase not initialized — nothing to listen to.
+      }
+    }
+  }
+
+  StreamSubscription<dynamic>? _sub;
+
+  @override
+  void dispose() {
+    _sub?.cancel();
+    super.dispose();
+  }
+}
+
 // Direct debug routes for each tab screen (prefixed /debug/...) exist because
 // browser automation can't tap the in-app bottom nav bar (it's rendered on a
 // Flutter web canvas, not real DOM elements). They are compiled out of
 // release builds below via kReleaseMode — production only exposes real routes.
+final _authRefresh = _AuthRefreshNotifier();
+
 final GoRouter _router = GoRouter(
   initialLocation: '/splash',
+  refreshListenable: _authRefresh,
   redirect: (context, state) {
     final path = state.uri.path;
     final isSplash = path == '/splash';
@@ -42,9 +73,14 @@ final GoRouter _router = GoRouter(
     // Demo mode: no real auth backend, keep every route reachable for review.
     if (AppConfig.isDemoMode) return null;
 
-    // Production: unauthenticated users always land on login.
+    // Production: unauthenticated users always land on login; authenticated
+    // users hitting login go straight home (refreshListenable re-runs this
+    // on every auth state change, so sign-in/out can't strand anyone).
     if (!_hasSupabaseSession && !isGoingToLogin && !isOnboarding) {
       return '/';
+    }
+    if (_hasSupabaseSession && isGoingToLogin) {
+      return '/home';
     }
     return null;
   },

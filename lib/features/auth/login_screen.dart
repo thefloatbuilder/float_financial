@@ -20,6 +20,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _nameController = TextEditingController();
   bool _isLoading = false;
   bool _isSignUpMode = false;
+  bool _showResendLink = false;
+  bool _resendSent = false;
   String? _errorMessage;
   String? _infoMessage;
 
@@ -53,6 +55,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           _errorMessage = 'Wrong email or password.';
         } else if (msg.contains('email not confirmed')) {
           _errorMessage = 'Check your inbox — confirm your email first.';
+          _showResendLink = true;
         } else {
           _errorMessage = 'Sign-in failed. Check your connection and try again.';
         }
@@ -88,6 +91,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         // Email confirmation enabled on the project — tell the user to verify.
         setState(() {
           _isSignUpMode = false;
+          _showResendLink = true;
           _infoMessage = 'Account created! Confirm your email, then sign in.';
         });
       }
@@ -123,10 +127,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               gradient: isDark ? AppColors.moonlightGradient : AppColors.sunlightGradient,
             ),
             child: SafeArea(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(minHeight: constraints.maxHeight - MediaQuery.of(context).padding.vertical),
+              child: Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(24),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight - MediaQuery.of(context).padding.vertical,
+                      // Login form stays readable on wide desktop windows
+                      // instead of stretching edge-to-edge.
+                      maxWidth: 460,
+                    ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -230,6 +240,30 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       style: const TextStyle(color: Colors.redAccent),
                     ),
                   ),
+                if (_showResendLink && !AppConfig.isDemoMode)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: TextButton(
+                      onPressed: _resendSent || _isLoading
+                          ? null
+                          : () async {
+                              final email = _emailController.text.trim();
+                              if (email.isEmpty) return;
+                              try {
+                                await SupabaseService.resendConfirmationEmail(email);
+                                if (mounted) setState(() => _resendSent = true);
+                              } catch (_) {
+                                if (mounted) {
+                                  setState(() => _errorMessage = "Couldn't resend — try again in a minute.");
+                                }
+                              }
+                            },
+                      child: Text(
+                        _resendSent ? '✓ Confirmation email resent' : 'Resend confirmation email',
+                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ),
                 const SizedBox(height: 4),
 
                 ElevatedButton(
@@ -266,7 +300,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
             ),
-          );
+          ),
+        );
         },
       ),
     );

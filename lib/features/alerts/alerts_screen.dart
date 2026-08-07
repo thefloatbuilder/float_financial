@@ -7,6 +7,7 @@ import '../../shared/services/supabase_service.dart';
 import '../../shared/widgets/float_header.dart';
 import '../../shared/widgets/float_empty_state.dart';
 import '../../shared/widgets/app_loading.dart';
+import '../../shared/widgets/float_error_state.dart';
 
 class AlertsScreen extends ConsumerWidget {
   const AlertsScreen({super.key});
@@ -92,7 +93,9 @@ class AlertsScreen extends ConsumerWidget {
               );
             },
             loading: () => const ShimmerList(itemCount: 3, itemHeight: 84),
-            error: (error, stack) => Center(child: Text('Error: $error')),
+            error: (_, __) => FloatErrorState(
+              onRetry: () => ref.invalidate(alertsProvider(user.id)),
+            ),
           ),
           floatingActionButton: FloatingActionButton.extended(
             onPressed: () => _showCreateAlertSheet(context, ref, user.id),
@@ -103,7 +106,11 @@ class AlertsScreen extends ConsumerWidget {
         );
       },
       loading: () => const Scaffold(body: Center(child: AppLoading())),
-      error: (error, stack) => Scaffold(body: Center(child: Text('Error: $error'))),
+      error: (_, __) => Scaffold(
+        body: FloatErrorState(
+          onRetry: () => ref.invalidate(currentUserProvider),
+        ),
+      ),
     );
   }
 

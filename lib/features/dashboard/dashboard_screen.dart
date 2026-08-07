@@ -31,10 +31,10 @@ class DashboardScreen extends ConsumerWidget {
   }
 
   Widget _buildDashboard(BuildContext context, Map<String, dynamic> portfolio) {
-    final totalValue = (portfolio['total_value'] ?? 152581.0).toStringAsFixed(0);
-    final monthlyChange = portfolio['monthly_change'] ?? 12.4;
-    final dailyYield = portfolio['daily_yield_estimate_usd'] ?? 412.0;
-    final isLive = portfolio['is_live'] ?? false;
+    final totalValue = (portfolio['total_value'] as num? ?? 0).toStringAsFixed(0);
+    final monthlyChange = portfolio['monthly_change'] as num? ?? 0;
+    final dailyYield = portfolio['daily_yield_estimate_usd'] as num? ?? 0;
+    final isLive = portfolio['is_live'] == true;
     final isPositive = monthlyChange >= 0;
     
     return SingleChildScrollView(
@@ -42,47 +42,102 @@ class DashboardScreen extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Offline / stale-data banner — taostats or price feed unreachable.
+          // Cached values (if any) still render below; never silently $0.
+          if (!isLive)
+            Consumer(
+              builder: (context, ref, _) {
+                final isDark = Theme.of(context).brightness == Brightness.dark;
+                final lastUpdated = portfolio['last_updated'] as String?;
+                final lastUpdatedLabel = lastUpdated != null
+                    ? DateTime.tryParse(lastUpdated)?.toLocal().toString().substring(0, 16)
+                    : null;
+                return Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.only(bottom: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.withOpacity(isDark ? 0.18 : 0.12),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: Colors.orange.withOpacity(0.4)),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.cloud_off, color: Colors.orange, size: 18),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          lastUpdatedLabel != null
+                              ? "Live prices unavailable — showing last data from $lastUpdatedLabel"
+                              : "Live prices unavailable — check your connection",
+                          style: TextStyle(
+                            fontSize: 12.5,
+                            fontWeight: FontWeight.w500,
+                            color: isDark ? AppColors.moonlightText : AppColors.darkText,
+                          ),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          ref.invalidate(subnetPositionsProvider);
+                          ref.read(portfolioProvider.notifier).refreshColdkeyData();
+                        },
+                        child: const Text('Retry', style: TextStyle(color: Colors.orange, fontWeight: FontWeight.w700)),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+
           // Header - cruise mode brand style
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  FloatLogo(
-                    size: 42,
-                    animated: false,
-                    showRipples: false,
-                    showBubbles: false,
-                    showExtraDecorations: false,
-                  ),
-                  const SizedBox(width: 12),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Good morning!',
-                        style: TextStyle(
-                          fontSize: 26,
-                          fontWeight: FontWeight.w800,
-                          color: Theme.of(context).brightness == Brightness.dark 
-                              ? AppColors.moonlightText 
-                              : AppColors.deepNavy,
-                        ),
+              // Wraps instead of overflowing on narrow phone widths.
+              Flexible(
+                child: Row(
+                  children: [
+                    FloatLogo(
+                      size: 42,
+                      animated: false,
+                      showRipples: false,
+                      showBubbles: false,
+                      showExtraDecorations: false,
+                    ),
+                    const SizedBox(width: 12),
+                    Flexible(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Good morning!',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 26,
+                              fontWeight: FontWeight.w800,
+                              color: Theme.of(context).brightness == Brightness.dark
+                                  ? AppColors.moonlightText
+                                  : AppColors.deepNavy,
+                            ),
+                          ),
+                          Text(
+                            'Your portfolio, on cruise mode',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.white60
+                                  : Colors.grey[600],
+                            ),
+                          ),
+                        ],
                       ),
-                      Text(
-                        'Your portfolio, on cruise mode',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Theme.of(context).brightness == Brightness.dark 
-                              ? Colors.white60 
-                              : Colors.grey[600],
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                    ),
+                  ],
+                ),
               ),
               if (isLive)
                 Container(
