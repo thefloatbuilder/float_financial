@@ -182,6 +182,7 @@ class ConnectionService {
     PlatformConnector(id: 'm1', name: 'M1 Finance', icon: '🥧', tier: ConnectionTier.brokerage, blurb: 'Pie-based automated portfolios.'),
     PlatformConnector(id: 'sofi', name: 'SoFi Invest', icon: '🎓', tier: ConnectionTier.brokerage, blurb: 'Active + automated investing.'),
     PlatformConnector(id: 'chase', name: 'J.P. Morgan / Chase', icon: '🏛️', tier: ConnectionTier.brokerage, blurb: 'Self-directed and advisor accounts.'),
+    PlatformConnector(id: 'itrustcapital', name: 'iTrustCapital', icon: '🏆', tier: ConnectionTier.brokerage, blurb: 'Crypto + gold IRAs — tax-advantaged crypto.'),
   ];
 
   static List<PlatformConnector> get all => [
